@@ -59,19 +59,38 @@ You can use this data for algorithmic trading, research, or real-time dashboards
 
 ## 🧰 How to Get the Code (Clone the Directory)
 
-You **do not need to clone the entire repository**.  
-Clone only this specific directory from the main repository using the following command:
+To keep your setup lightweight, **clone only the Task 5 - Binance WebSocket Price Precision directory** from the main repository.  
+Follow these steps:
 
-```bash
-git clone --depth 1 --filter=blob:none --sparse https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
-cd AI-Backend-Hiring-Tasks-Prodigal-AI
-git sparse-checkout init --cone
-git sparse-checkout set "Task 1 - ML + LLM Pipeline Orchestration/Binance Tick Data Streamer to InfluxDB"
-cd "Task 1 - ML + LLM Pipeline Orchestration/Binance Tick Data Streamer to InfluxDB"
-```
+1. **Create a folder for this project and navigate into it:**
+    ```bash
+    mkdir binance-websocket-ticker
+    ```
 
-This will fetch **only** the specific directory from the project directory, making your setup faster and lightweight!
+    ```bash
+    cd binance-websocket-ticker
+    ```
 
+2. **Clone only the Task 5 directory from the repository using sparse checkout:**
+    ```bash
+    git clone --depth 1 --filter=blob:none --sparse https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git .
+    ```
+
+    ```bash
+    git sparse-checkout init --cone
+    ```
+
+    ```bash
+    git sparse-checkout set "Task 5 - Binance WebSocket Price Precision"
+    ```
+
+    ```bash
+    cd "Task 5 - Binance WebSocket Price Precision/binance-websocket-ticker"
+    ```
+
+This will fetch **only** the `Task 5 - Binance WebSocket Price Precision` directory and its content, making your setup fast and focused.
+
+---
 ---
 
 ## 🏗️ Architecture
