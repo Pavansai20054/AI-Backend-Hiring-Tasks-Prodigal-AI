@@ -39,12 +39,12 @@ A professional-grade Python application for streaming real-time Binance cryptocu
     - [Expected Output:](#expected-output)
     - [🛑 To Stop the Streamer:](#-to-stop-the-streamer)
     - [🔧 Troubleshooting:](#-troubleshooting)
-  - [📊 Data Model](#-data-model)
-    - [Measurement Structure:](#measurement-structure)
-    - [Example Data Point:](#example-data-point)
   - [📈 Visualizing and Querying Your Data](#-visualizing-and-querying-your-data)
     - [Using InfluxDB Data Explorer:](#using-influxdb-data-explorer)
     - [Integration with External Tools:](#integration-with-external-tools)
+  - [📊 Data Model](#-data-model)
+    - [Measurement Structure:](#measurement-structure)
+    - [Example Data Point:](#example-data-point)
   - [🔒 Security Notes](#-security-notes)
     - [API Token Security:](#api-token-security)
     - [Environment Variables Best Practices:](#environment-variables-best-practices)
@@ -315,19 +315,25 @@ ModuleNotFoundError: No module named 'websockets','influxdb-client'
    python -m pip install --upgrade pip
    ```
 
-4. **Install packages with explicit python -m pip:**
+4. **If you still face errors, upgrade your virtual environment tooling:**  
+   (Sometimes, especially on older systems, venv might be out of date.)
+   ```bash
+   python -m venv binance_env --upgrade-deps
+   ```
+
+5. **Install packages with explicit python -m pip:**
    ```bash
    python -m pip install websockets==12.0
    python -m pip install influxdb-client==1.49.0
    python -m pip install python-dotenv==1.1.0
    ```
 
-5. **Alternative: Force reinstall all packages:**
+6. **Alternative: Force reinstall all packages:**
    ```bash
    python -m pip install --force-reinstall websockets==12.0 influxdb-client==1.49.0 python-dotenv==1.1.0
    ```
 
-6. **Verify installation again:**
+7. **Verify installation again:**
    ```bash
    python -c "import websockets; print('websockets version:', websockets.__version__)"
    python -c "import influxdb_client; print('influxdb-client imported successfully')"
@@ -476,7 +482,7 @@ echo "" > .env.local
 ```bash
 INFLUXDB_URL=https://us-east-1-1.aws.cloud2.influxdata.com
 INFLUXDB_TOKEN=placeholder-will-add-token-next
-INFLUXDB_ORG=Personal
+INFLUXDB_ORG=company-name
 INFLUXDB_BUCKET=binance_ticks
 BINANCE_WS_URL=wss://stream.binance.com:9443/stream?streams=btcusdt@trade/ethusdt@trade
 ```
@@ -512,7 +518,7 @@ Your final `.env.local` file should look like this:
 ```bash
 INFLUXDB_URL=https://us-east-1-1.aws.cloud2.influxdata.com
 INFLUXDB_TOKEN=your-actual-api-token-here
-INFLUXDB_ORG=Personal
+INFLUXDB_ORG=company-name
 INFLUXDB_BUCKET=binance_ticks
 BINANCE_WS_URL=wss://stream.binance.com:9443/stream?streams=btcusdt@trade/ethusdt@trade
 ```
@@ -612,7 +618,7 @@ Now you're ready to start streaming live cryptocurrency data!
 ### Start the Streamer:
 
 ```bash
-python stream_binance.py
+python binance_ws_influxdb.py
 ```
 
 ### Expected Output:
@@ -640,6 +646,29 @@ Press `Ctrl+C` in your terminal.
 
 ---
 
+## 📈 Visualizing and Querying Your Data
+
+Once data is streaming, you can analyze and visualize it:
+
+### Using InfluxDB Data Explorer:
+
+1. **Navigate to Data Explorer** by clicking on the bottom slider you will see the names of the sidebars in that click on Data Explorer.
+2. **Select your bucket:** `binance_ticks`
+3. **Choose measurement:** `price_ticks`
+4. **Filter by symbol:** Select specific trading pairs
+5. **Select fields:** Choose `price` for visualization
+6. **Set time range:** Last 1 hour, 1 day, etc.
+7. **Click on Run** to see your live price charts
+
+### Integration with External Tools:
+
+- **Grafana:** Create professional dashboards
+- **Tableau:** Advanced analytics and visualization
+- **Python/Jupyter:** Custom analysis with InfluxDB client
+- **Excel/Google Sheets:** Export data for spreadsheet analysis
+
+---
+
 ## 📊 Data Model
 
 Understanding how your data is structured in InfluxDB:
@@ -659,29 +688,6 @@ Understanding how your data is structured in InfluxDB:
 |------|--------|-------|--------------|
 | 2025-06-27T10:30:15.123Z | BTCUSDT | 68341.15 | "68341.15000000" |
 | 2025-06-27T10:30:15.456Z | ETHUSDT | 3456.789 | "3456.78900000" |
-
----
-
-## 📈 Visualizing and Querying Your Data
-
-Once data is streaming, you can analyze and visualize it:
-
-### Using InfluxDB Data Explorer:
-
-1. **Navigate to Data Explorer** by clicking on the bottom slider you will see the names of the sidebars in that click on Data Explorer.
-2. **Select your bucket:** `binance_ticks`
-3. **Choose measurement:** `price_ticks`
-4. **Filter by symbol:** Select specific trading pairs
-5. **Select fields:** Choose `price` for visualization
-6. **Set time range:** Last 1 hour, 1 day, etc.
-7. **Submit query** to see your live price charts
-
-### Integration with External Tools:
-
-- **Grafana:** Create professional dashboards
-- **Tableau:** Advanced analytics and visualization
-- **Python/Jupyter:** Custom analysis with InfluxDB client
-- **Excel/Google Sheets:** Export data for spreadsheet analysis
 
 ---
 
