@@ -131,7 +131,7 @@ dir
 # Check if you're in the right directory
 ls -la
 
-# You should see files like: stream_binance.py, requirements.txt, etc.
+# You should see files like: binance_ws_influxdb.py, requirements.txt, README.md.
 ```
 
 ---
