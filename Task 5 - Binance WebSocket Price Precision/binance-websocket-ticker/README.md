@@ -123,7 +123,7 @@ cd "Task 5 - Binance WebSocket Price Precision/binance-websocket-ticker"
 # Check if you're in the right directory
 dir
 
-# You should see files like: stream_binance.py, requirements.txt, etc.
+# You should see files like: binance_ws_influxdb.py, requirements.txt, README.md.
 ```
 
 **On Linux/macOS:**
