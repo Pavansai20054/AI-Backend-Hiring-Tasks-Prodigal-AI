@@ -349,8 +349,6 @@ Government Schemes Portal
 - 📝 **Article Titles** - Complete research paper/blog post titles
 - 🔗 **Direct Links** - Full URLs to individual articles
 - 📄 **Descriptions** - Article summaries and abstracts
-- 📅 **Publication Metadata** - Dates and author information (when available)
-- 🏷️ **Research Categories** - Topic classifications and tags
 
 **Technical Challenges Solved:**
 - ⚡ Dynamic JavaScript content rendering
