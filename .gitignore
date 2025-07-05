@@ -2,19 +2,53 @@
 Eligibility-to-crack.pdf
 AI Backend Hiring Tasks - Prodigal AI.pdf
 
-
-
 # Markdown Files
 Eligibility-to-crack.md
 
-
-
+# Environmental Variable Files
+Task 1 - AI Backend Hiring Tasks/.env.local
+Task 5 - Binance WebSocket Price Precision/binance-websocket-ticker/.env.local
+Task 2 - Role-Based Access Control System/.env.local
+Task 3 - Kafka + Zookeeper for High-Throughput API/.env.local
 
 # Virtual Environments
-Task 5 - Binance WebSocket Price Precision/binance-websocket-ticker/.env.local
-
-
-
+Task 4 - Kubernetes Pod Scaling/k8s-hpa-demo/k8s_hpa_env/
 
 # CSV files
 Task 5 - Binance WebSocket Price Precision/binance-websocket-ticker/influxdata.csv
+
+# gitignore files
+Task 2 - Role-Based Access Control System/frontend/.gitignore
+
+# Pycache files
+Task 2 - Role-Based Access Control System/backend/app/__pycache__/
+Task 2 - Role-Based Access Control System/backend/app/api/__pycache__/
+Task 3 - Kafka + Zookeeper for High-Throughput API/api_server/__pycache__/
+Task 1 - ML + LLM Pipeline Orchestration/airflow/dags/__pycache__/
+Task 1 - ML + LLM Pipeline Orchestration/rag_pipeline/__pycache__/
+
+# node_modules
+Task 2 - Role-Based Access Control System/frontend/node_modules/
+
+# mlruns (MLflow logs, artifacts, models)
+Task 1 - ML + LLM Pipeline Orchestration/mlruns/
+
+# data folder (ignore all generated, but keep original datasets if needed)
+Task 1 - ML + LLM Pipeline Orchestration/data/*
+!Task 1 - ML + LLM Pipeline Orchestration/data/titanic.csv
+!Task 1 - ML + LLM Pipeline Orchestration/data/winequality-red.csv
+
+# General Python ignores
+__pycache__/
+
+
+# Docker/Compose env files
+.env
+.env.*
+
+# Logs
+*.log
+
+# Output folders
+output/
+outputs/

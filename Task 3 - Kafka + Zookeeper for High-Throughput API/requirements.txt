@@ -1,0 +1,5 @@
+fastapi==0.100.1
+uvicorn==0.34.2
+kafka-python==2.2.15
+aiohttp==3.12.13
+python-dotenv==1.1.0

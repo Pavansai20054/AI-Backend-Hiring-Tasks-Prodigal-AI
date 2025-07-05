@@ -1,55 +1,67 @@
 import asyncio
 import websockets
 import json
-from datetime import datetime, timezone
-from influxdb_client import InfluxDBClient, Point, WritePrecision
-from influxdb_client.client.write_api import SYNCHRONOUS
-from decimal import Decimal, InvalidOperation
-from dotenv import load_dotenv
 import os
+from datetime import datetime, timezone
+from decimal import Decimal, InvalidOperation
+import asyncpg
+from dotenv import load_dotenv
 
-# Load environment variables from .env.local file
+# Load environment variables from .env.local
 load_dotenv(dotenv_path=".env.local")
 
-# InfluxDB connection settings
-INFLUXDB_URL = os.getenv("INFLUXDB_URL")
-INFLUXDB_TOKEN = os.getenv("INFLUXDB_TOKEN")
-INFLUXDB_ORG = os.getenv("INFLUXDB_ORG")
-INFLUXDB_BUCKET = os.getenv("INFLUXDB_BUCKET")
-BINANCE_WS_URL = os.getenv("BINANCE_WS_URL")
+POSTGRES_HOST = os.getenv("POSTGRES_HOST")
+POSTGRES_PORT = os.getenv("POSTGRES_PORT", "5432")
+POSTGRES_DB = os.getenv("POSTGRES_DB")
+POSTGRES_USER = os.getenv("POSTGRES_USER")
+POSTGRES_PASSWORD = os.getenv("POSTGRES_PASSWORD")
 
-def get_influxdb_client():
-    client = InfluxDBClient(
-        url=INFLUXDB_URL,
-        token=INFLUXDB_TOKEN,
-        org=INFLUXDB_ORG,
-        timeout=5000
+BINANCE_WS_URL = os.getenv("BINANCE_WS_URL", "wss://stream.binance.com:9443/stream?streams=btcusdt@trade/ethusdt@trade")
+
+CREATE_TABLE_SQL = """
+CREATE TABLE IF NOT EXISTS price_ticks (
+    id SERIAL PRIMARY KEY,
+    symbol TEXT NOT NULL,
+    price_str TEXT NOT NULL,
+    price NUMERIC(30, 12) NOT NULL,
+    ts TIMESTAMPTZ NOT NULL
+);
+"""
+
+INSERT_TICK_SQL = """
+INSERT INTO price_ticks (symbol, price_str, price, ts)
+VALUES ($1, $2, $3, $4);
+"""
+
+async def get_postgres_pool():
+    pool = await asyncpg.create_pool(
+        host=POSTGRES_HOST,
+        port=POSTGRES_PORT,
+        user=POSTGRES_USER,
+        password=POSTGRES_PASSWORD,
+        database=POSTGRES_DB,
+        min_size=1,
+        max_size=5,
+        timeout=5,
     )
-    return client
+    async with pool.acquire() as conn:
+        await conn.execute(CREATE_TABLE_SQL)
+    return pool
 
-async def write_tick(write_api, symbol, price_str, ts):
-    dt = datetime.fromtimestamp(ts / 1000, tz=timezone.utc)
+async def write_tick(pool, symbol, price_str, ts):
     try:
         price_decimal = Decimal(price_str)
-        price_float = float(price_decimal)
+        dt = datetime.fromtimestamp(ts / 1000, tz=timezone.utc)
     except (InvalidOperation, ValueError):
         print(f"[Warning] Invalid price: {price_str}")
         return
 
-    point = (
-        Point("price_ticks")
-        .tag("symbol", symbol)
-        .field("price", price_float)
-        .field("price_str", str(price_decimal))
-        .time(dt, WritePrecision.MS)
-    )
-    write_api.write(bucket=INFLUXDB_BUCKET, org=INFLUXDB_ORG, record=point)
+    async with pool.acquire() as conn:
+        await conn.execute(INSERT_TICK_SQL, symbol, str(price_decimal), price_decimal, dt)
     print(f"[{symbol}] {price_decimal} at {dt.strftime('%Y-%m-%d %H:%M:%S.%f UTC')}")
 
 async def stream_binance():
-    client = get_influxdb_client()
-    write_api = client.write_api(write_options=SYNCHRONOUS)
-
+    pool = await get_postgres_pool()
     while True:
         try:
             print("Connecting to Binance WebSocket...")
@@ -69,7 +81,7 @@ async def stream_binance():
                             symbol = payload["s"]
                             price = payload["p"]
                             ts = payload["T"]
-                            await write_tick(write_api, symbol, price, ts)
+                            await write_tick(pool, symbol, price, ts)
                     except Exception as ex:
                         print(f"[Warning] Failed to process message: {ex}")
         except (websockets.ConnectionClosed, websockets.InvalidStatusCode, asyncio.TimeoutError) as e:
@@ -85,4 +97,4 @@ if __name__ == "__main__":
     try:
         asyncio.run(stream_binance())
     except KeyboardInterrupt:
-        print("\nStopped Binance WebSocket to InfluxDB streamer.")
+        print("\nStopped Binance WebSocket to PostgreSQL streamer.")

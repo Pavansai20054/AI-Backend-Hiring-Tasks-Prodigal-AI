@@ -1,0 +1,6 @@
+p, admin, *, (read)|(write)|(delete)
+p, manager, *, (read)|(write)
+p, contributor, *, (read)|(write)
+p, viewer, *, (read)
+g, alice, admin
+g, bob, manager

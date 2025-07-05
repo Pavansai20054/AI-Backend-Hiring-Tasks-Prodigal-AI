@@ -1,6 +1,12 @@
 # 🚀 Binance Tick Data Streamer to InfluxDB ☁️💹
 
-A professional-grade Python application for streaming real-time Binance cryptocurrency tick data into InfluxDB Cloud, supporting robust analytics, research, and time-series dashboards.
+[![Python](https://img.shields.io/badge/Python-3.8+-FFD43B?logo=python&logoColor=blue)](https://www.python.org/downloads/)
+[![Docker](https://img.shields.io/badge/Docker-Latest-0DB7ED?logo=docker&logoColor=white)](https://www.docker.com/) 
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Latest-3371E3?logo=kubernetes&logoColor=white)](https://kubernetes.io/) 
+[![FastAPI](https://img.shields.io/badge/FastAPI-Latest-00C7B7?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![License](https://img.shields.io/badge/License-Proprietary-E85C33)](../../LICENSE)
+
+> A professional-grade Python application for streaming real-time Binance cryptocurrency tick data into InfluxDB Cloud, supporting robust analytics, research, and time-series dashboards.
 
 ---
 
@@ -721,9 +727,11 @@ For questions, suggestions, or collaboration:
 
 ---
 
-## 📝 License
+## ⚖️ License
 
-This project is provided for educational and research purposes. See [LICENSE](../../LICENSE) for full terms.
+This project is **not open source**. All rights reserved.
+
+See the [LICENSE](../../LICENSE) file for details.
 
 ---
 

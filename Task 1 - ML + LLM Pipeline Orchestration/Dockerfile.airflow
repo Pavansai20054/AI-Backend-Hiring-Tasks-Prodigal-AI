@@ -1,0 +1,12 @@
+FROM apache/airflow:2.8.2-python3.10
+
+USER root
+
+COPY airflow/dags /opt/airflow/dags
+COPY ml_pipeline /opt/ml_pipeline
+COPY data /data
+COPY requirements.txt /requirements.txt
+
+USER airflow
+
+RUN pip install --no-cache-dir -r /requirements.txt

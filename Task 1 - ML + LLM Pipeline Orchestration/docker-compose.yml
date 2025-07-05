@@ -1,0 +1,79 @@
+version: "3.8"
+services:
+  mlflow:
+    image: ghcr.io/mlflow/mlflow:latest
+    command: mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlruns --host 0.0.0.0 --port 5000
+    ports:
+      - "5000:5000"
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    volumes:
+      - ./mlruns:/mlruns
+
+  spark:
+    image: bitnami/spark:latest
+    environment:
+      - SPARK_MODE=master
+    ports:
+      - "7077:7077"
+      - "8080:8080"
+    volumes:
+      - ./data:/data
+
+  airflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.airflow
+    environment:
+      - AIRFLOW__CORE__SQL_ALCHEMY_CONN=sqlite:////tmp/airflow.db
+      - AIRFLOW__CORE__LOAD_EXAMPLES=False
+    ports:
+      - "8081:8080"
+    depends_on:
+      - mlflow
+      - spark
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./ml_pipeline:/opt/ml_pipeline
+      - ./data:/data
+      - ./mlruns:/mlruns
+      - airflow_db:/tmp
+    command: >
+      bash -c "
+      airflow db migrate &&
+      airflow users create --username admin --firstname Admin --lastname User --role Admin --email admin@example.com --password admin || true &&
+      airflow scheduler & airflow webserver
+      "
+
+  ml_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.ml
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./ml_pipeline:/app
+      - ./data:/data
+      - ./mlruns:/mlruns
+    depends_on:
+      - mlflow
+
+  rag_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.rag
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./rag_pipeline:/app
+      - ./data:/data
+
+  faiss_db:
+    image: "python:3.10"
+    command: tail -f /dev/null
+    volumes:
+      - ./data:/data
+
+volumes:
+  mlruns:
+  airflow_db:

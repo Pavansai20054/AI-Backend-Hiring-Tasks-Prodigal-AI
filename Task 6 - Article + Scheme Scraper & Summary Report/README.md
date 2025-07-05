@@ -2,9 +2,9 @@
 
 <div align="center">
 
-![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python&logoColor=white)
-![Playwright](https://img.shields.io/badge/Playwright-Latest-green?style=for-the-badge&logo=playwright&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
+[![Playwright](https://img.shields.io/badge/Playwright-Latest-green?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
+[![License](https://img.shields.io/badge/License-Proprietary-yellow?style=for-the-badge)](../LICENSE)
 ![Status](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge)
 
 *A robust, enterprise-grade Python solution for automated data extraction from dynamic web platforms*
@@ -838,12 +838,11 @@ If you encounter any issues or have questions about the scraper:
 - 💼 **LinkedIn**: [Connect for Professional Inquiries](https://www.linkedin.com/in/rangdal-pavansai)
 
 ---
+## ⚖️ License
 
-## 📄 License
+This project is **not open source**. All rights reserved.
 
-This project is licensed under the **MIT License**. 
-
-📋 **See the full license**: [LICENSE](../LICENSE)
+See the [LICENSE](../LICENSE) file for details.
 
 ### ⚖️ **Important Legal Notices**
 

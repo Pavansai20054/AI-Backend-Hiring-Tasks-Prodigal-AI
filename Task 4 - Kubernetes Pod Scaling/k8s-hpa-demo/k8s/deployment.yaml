@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-hpa-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-hpa-demo
+  template:
+    metadata:
+      labels:
+        app: fastapi-hpa-demo
+    spec:
+      containers:
+      - name: fastapi-hpa-demo
+        image: fastapi-hpa-demo:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 500m
+            memory: 256Mi
