@@ -1,10 +1,23 @@
 import os
-import pandas as pd
+from pyspark.sql import SparkSession
 
 DATA_PREFIX = os.environ.get('DATA_PREFIX', '/data')
 
-df = pd.read_csv(f'{DATA_PREFIX}/titanic.csv')
-df['Age'] = df['Age'].fillna(df['Age'].median())
-df['Embarked'] = df['Embarked'].fillna(df['Embarked'].mode()[0])
-df.to_csv(f'{DATA_PREFIX}/titanic_preprocessed.csv', index=False)
-print("Titanic preprocessing done.")
+spark = SparkSession.builder.appName("TitanicPreprocess").getOrCreate()
+
+# Read Titanic CSV as Spark DataFrame
+df = spark.read.csv(f'{DATA_PREFIX}/titanic.csv', header=True, inferSchema=True)
+
+# Fill missing Age with median
+age_median = df.approxQuantile("Age", [0.5], 0.001)[0]
+df = df.fillna({"Age": age_median})
+
+# Fill missing Embarked with mode
+embarked_mode = df.groupBy("Embarked").count().orderBy("count", ascending=False).first()["Embarked"]
+df = df.fillna({"Embarked": embarked_mode})
+
+# Save as preprocessed CSV
+df.write.csv(f'{DATA_PREFIX}/titanic_preprocessed.csv', header=True, mode="overwrite")
+print("Titanic preprocessing done (with Spark).")
+
+spark.stop()

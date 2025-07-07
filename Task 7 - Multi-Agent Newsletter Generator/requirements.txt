@@ -1,0 +1,12 @@
+google-generativeai
+pydantic
+python-telegram-bot==20.0
+beautifulsoup4
+requests
+numpy
+scikit-learn
+schedule
+tqdm
+python-dotenv
+feedparser
+langchain-community

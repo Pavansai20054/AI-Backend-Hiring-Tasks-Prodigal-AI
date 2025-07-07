@@ -1,6 +1,10 @@
 from flask import Flask, request, jsonify
+import mlflow
 import mlflow.sklearn
 import pandas as pd
+
+# Always set the MLflow tracking URI
+mlflow.set_tracking_uri("http://mlflow:5000")
 
 app = Flask(__name__)
 

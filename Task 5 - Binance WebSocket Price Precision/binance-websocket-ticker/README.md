@@ -12,154 +12,389 @@
 
 ## 📑 Table of Contents
 
-- [🚀 Binance Tick Data Streamer to InfluxDB ☁️💹](#-binance-tick-data-streamer-to-influxdb-️)
-  - [📑 Table of Contents](#-table-of-contents)
-  - [📚 Project Overview](#-project-overview)
-  - [✨ Features](#-features)
-  - [🛠️ Prerequisites](#️-prerequisites)
-  - [🏗️ Architecture](#️-architecture)
-  - [🧰 Step 1: Get the Code (Clone the Directory)](#-step-1-get-the-code-clone-the-directory)
-  - [📦 Step 2: Install Required Python Packages](#-step-2-install-required-python-packages)
-    - [🐍 Option A: Using Python venv (Recommended for most users)](#-option-a-using-python-venv-recommended-for-most-users)
-    - [🐍 Option B: Using Conda (If you have Anaconda/Miniconda installed)](#-option-b-using-conda-if-you-have-anacondaminiconda-installed)
-    - [📋 Install Required Packages](#-install-required-packages)
-      - [Method A: Install from requirements.txt (Recommended)](#method-a-install-from-requirementstxt-recommended)
-      - [Method B: Install packages individually](#method-b-install-packages-individually)
-    - [✅ Verify Installation](#-verify-installation)
-    - [🔄 Managing Your Virtual Environment](#-managing-your-virtual-environment)
-    - [📝 Important Notes](#-important-notes)
-    - [🚨 Troubleshooting Virtual Environments \& Package Installation](#-troubleshooting-virtual-environments--package-installation)
-      - [Common Error: "ModuleNotFoundError: No module named 'websockets'"](#common-error-modulenotfounderror-no-module-named-websockets)
-      - [Other Common Issues:](#other-common-issues)
-  - [🥇 Step 3: Create Your InfluxDB Cloud Account](#-step-3-create-your-influxdb-cloud-account)
-  - [🏷️ Step 4: Set Up InfluxDB for the Project](#️-step-4-set-up-influxdb-for-the-project)
-    - [🪣 Create a Bucket (Database)](#-create-a-bucket-database)
-    - [🌐 Get Your InfluxDB URL](#-get-your-influxdb-url)
-    - [🔑 Create an API Token](#-create-an-api-token)
-    - [✅ Verify Your Configuration](#-verify-your-configuration)
-  - [🧠 Step 5: Understanding the Code](#-step-5-understanding-the-code)
-    - [Key Components:](#key-components)
-    - [Main Script Flow:](#main-script-flow)
-  - [▶️ Step 6: Running the Streamer](#️-step-6-running-the-streamer)
-    - [Start the Streamer:](#start-the-streamer)
-    - [Expected Output:](#expected-output)
-    - [🛑 To Stop the Streamer:](#-to-stop-the-streamer)
-    - [🔧 Troubleshooting:](#-troubleshooting)
-  - [📈 Visualizing and Querying Your Data](#-visualizing-and-querying-your-data)
-    - [Using InfluxDB Data Explorer:](#using-influxdb-data-explorer)
-    - [Integration with External Tools:](#integration-with-external-tools)
-  - [📊 Data Model](#-data-model)
-    - [Measurement Structure:](#measurement-structure)
-    - [Example Data Point:](#example-data-point)
-  - [🔒 Security Notes](#-security-notes)
-    - [API Token Security:](#api-token-security)
-    - [Environment Variables Best Practices:](#environment-variables-best-practices)
-  - [📬 Contact](#-contact)
-  - [📝 License](#-license)
+- [📚 Project Overview](#-project-overview)
+- [✨ Features](#-features)
+- [🏗️ Architecture](#️-architecture)
+- [🛠️ Prerequisites](#️-prerequisites)
+- [🧰 Installation Guide](#-installation-guide)
+  - [🛠️ Step 1: Check and Install Git](#step-1-check-and-install-git)
+    - [🔍 Check if Git is Already Installed](#check-if-git-is-already-installed)
+    - [⬇️ If Git is Not Installed or Version is Too Old](#if-git-is-not-installed-or-version-is-too-old)
+  - [🐍 Step 2: Check and Install Python](#step-2-check-and-install-python)
+    - [🔍 Check if Python is Already Installed](#check-if-python-is-already-installed)
+    - [⬇️ If Python is Not Installed or Version is Too Old](#if-python-is-not-installed-or-version-is-too-old)
+  - [🐘 Step 3: Check and Install PostgreSQL](#step-3-check-and-install-postgresql)
+    - [🔍 Check if PostgreSQL is Already Installed](#check-if-postgresql-is-already-installed)
+    - [⬇️ If PostgreSQL is Not Installed or Version is Too Old](#if-postgresql-is-not-installed-or-version-is-too-old)
+  - [📦 Step 4: Get the Code](#step-4-get-the-code)
+    - [🔗 Clone the Repository](#clone-the-repository)
+    - [🗂️ Verify Your Setup](#verify-your-setup)
+  - [🛡️ Step 5: Create Database and User](#step-5-create-database-and-user)
+    - [🔐 Access PostgreSQL](#access-postgresql)
+    - [🗄️ Create Database and User](#create-database-and-user)
+    - [✅ Test the Connection](#test-the-connection)
+  - [🧪 Step 6: Set Up Python Virtual Environment](#step-6-set-up-python-virtual-environment)
+    - [🌱 Create Virtual Environment](#create-virtual-environment)
+    - [📥 Install Required Packages](#install-required-packages)
+    - [🔎 Verify Activation and Installation](#verify-activation-and-installation)
+  - [⚙️ Step 7: Create and Configure .env.local](#step-7-create-and-configure-envlocal)
+    - [📄 Create Configuration File](#create-configuration-file)
+    - [📝 Add Configuration](#add-configuration)
+    - [🛠️ Configuration Options](#configuration-options)
+- [🧠 Understanding the Code](#-understanding-the-code)
+  - [🧩 Core Components](#core-components)
+  - [🔄 Data Flow](#data-flow)
+- [▶️ Running the Streamer](#️-running-the-streamer)
+  - [🏁 Start the Application](#start-the-application)
+  - [🖥️ Expected Output](#expected-output)
+  - [🛑 Stop the Application](#stop-the-application)
+  - [♻️ Managing the Virtual Environment](#managing-the-virtual-environment)
+- [📊 Data Model](#-data-model)
+  - [📋 Table Structure](#table-structure)
+  - [🗂️ SQL Schema](#sql-schema)
+  - [📈 Sample Data](#sample-data)
+- [📈 Querying Your Data](#-querying-your-data)
+  - [🔗 Connect to PostgreSQL](#connect-to-postgresql)
+  - [🔎 Basic Queries](#basic-queries)
+  - [📊 Advanced Analytics](#advanced-analytics)
+- [🚨 Troubleshooting](#-troubleshooting)
+  - [🧰 Common Issues and Solutions](#common-issues-and-solutions)
+  - [🐞 Debug Mode](#debug-mode)
+  - [🆘 Getting Help](#getting-help)
+- [🔒 Security Notes](#-security-notes)
+  - [🔏 Database Security](#database-security)
+  - [🌐 Network Security](#network-security)
+  - [🛡️ Code Security](#code-security)
+- [📝 License](#-license)
+- [📬 Contact](#-contact)
+  - [🙋 Get Help & Support](#get-help--support)
+  - [⏰ Response Times](#response-times)
 
 ---
 
 ## 📚 Project Overview
 
-This project captures and stores high-frequency Binance trade data ("tick data") in real time, utilizing InfluxDB Cloud for scalable time-series storage. It is designed for developers, data scientists, and financial analysts who require accurate and high-resolution streaming price data for cryptocurrencies. You can use this data for algorithmic trading, research, or real-time dashboards.
+This project captures and stores high-frequency Binance trade data ("tick data") in real time, utilizing **PostgreSQL** for scalable, reliable, and millisecond-precision time-series storage. It is designed for developers, data scientists, and financial analysts who require accurate and high-resolution streaming price data for cryptocurrencies.
 
 ---
 
 ## ✨ Features
 
-- ⚡ **Real-Time Binance Trade Data:** Streams live trade ticks for multiple cryptocurrency pairs (e.g., BTCUSDT, ETHUSDT)
-- 🧮 **High-Precision Storage:** Records price as both a float (for queries) and a string (full decimal precision) to preserve accuracy
-- ⏱️ **Millisecond Resolution:** Each trade is timestamped with UTC time at millisecond precision
-- 🔁 **Robust Connection Handling:** Automatically reconnects in case of WebSocket interruptions for uninterrupted data collection
-- ☁️ **Cloud-Native Integration:** Designed for InfluxDB Cloud, allowing instant access to data from anywhere and integration with visualization tools
-
----
-
-## 🛠️ Prerequisites
-
-Before starting, ensure you have:
-
-- 🐍 **Python 3.8 or newer** installed on your system
-- 💻 **Command-line familiarity** (Windows, Linux, or macOS)
-- 🌐 **Internet connection** for downloading packages and streaming data
-- 🏦 **No Binance account required** (uses public trade stream)
-
-> **Note:** You'll create a free InfluxDB Cloud account in Step 3 (no credit card required)
+- **🔄 Real-Time Binance Trade Data:** Streams live trade ticks for multiple cryptocurrency pairs (e.g., BTCUSDT, ETHUSDT)
+- **🎯 High-Precision Storage:** Records price as both a float (for queries) and a string (full decimal precision) to preserve accuracy
+- **⚡ Millisecond Resolution:** Each trade is timestamped with UTC time at millisecond precision
+- **🔧 Robust Connection Handling:** Automatically reconnects in case of WebSocket interruptions for uninterrupted data collection
+- **🆓 Open Source Database:** Uses PostgreSQL, a battle-tested, scalable, and free open-source RDBMS
+- **🚀 Production Ready:** Built with async/await for high performance and proper error handling
 
 ---
 
 ## 🏗️ Architecture
 
-The architecture of this project is designed for reliability, error-handling, and real-time data streaming:
-
-- 🔌 **Binance WebSocket API:** Provides a continuous, real-time stream of cryptocurrency trade events for selected trading pairs
-
-- 🐍 **Python Streamer (asyncio & websockets):**
-  - Connects to Binance's WebSocket API and listens for incoming tick data using asynchronous networking
-  - Parses and validates each tick, extracting the trade pair, price (as string and float), and timestamp
-  - Handles errors robustly:
-    - 🔃 Automatically reconnects if the WebSocket connection drops
-    - 📝 Logs and skips malformed or invalid messages
-    - 🛡️ Ensures data integrity before writing to InfluxDB Cloud
-
-- ☁️ **InfluxDB Cloud:** Receives and stores each tick as a time-series data point in the `price_ticks` measurement with millisecond-precision timestamps
-
-**Data Flow:**
 ```
-[Binance WebSocket API] → [Python Streamer] → [InfluxDB Cloud]
-         ↓                        ↓
-[Auto-Reconnect Logic]    [Error Handling & Validation]
+┌─────────────────┐    WebSocket     ┌───────────────────┐    asyncpg     ┌─────────────────┐
+│   Binance API   │ ──────────────►  │  Python Streamer  │ ─────────────► │   PostgreSQL    │
+│                 │  Real-time data  │                   │  Store ticks   │                 │
+│ • BTCUSDT       │                  │ • Parse & Validate│                │ • price_ticks   │
+│ • ETHUSDT       │                  │ • Error Handling  │                │ • Millisecond   │
+│ • More pairs... │                  │ • Auto-reconnect  │                │   precision     │
+└─────────────────┘                  └───────────────────┘                └─────────────────┘
+```
+
+**🔧 Components:**
+- **Binance WebSocket API:** Provides continuous real-time trade events
+- **Python Streamer:** Handles connection, parsing, validation, and database writes
+- **PostgreSQL:** Stores tick data with high precision and performance
+
+---
+
+## 🛠️ Prerequisites
+
+- **💻 Operating System:** Windows 10+, macOS 10.14+, or Linux (Ubuntu 18.04+)
+- **🔧 Git:** Version 2.0+ (for cloning the repository)
+- **🐍 Python:** Version 3.8 or newer
+- **🗄️ PostgreSQL:** Version 12+ (we'll help you install this)
+- **🌐 Internet Connection:** Required for streaming data from Binance
+- **⌨️ Command Line Access:** Basic familiarity with terminal/command prompt
+- **❌ No Binance Account Required:** Uses public trade stream data
+
+---
+
+## 🧰 Installation Guide
+
+### Step 1: Check and Install Git
+
+Git is required to clone the repository from GitHub.
+
+#### 🔍 Check if Git is Already Installed by command prompt or windows powershell
+
+**🪟 Windows:**
+```cmd
+git --version
+```
+
+**🍎🐧 macOS/Linux:**
+```bash
+git --version
+```
+
+#### ✅ Version Requirements
+- **Minimum Required:** Git 2.0+
+- **Recommended:** Latest stable version
+
+#### 📥 If Git is Not Installed or Version is Too Old
+
+**🪟 Windows:**
+1. Download Git from [git-scm.com](https://git-scm.com/downloads)
+2. Run the installer with default settings
+3. Restart Command Prompt/PowerShell
+4. Verify: `git --version`
+
+**🍎 macOS:**
+```bash
+# Using Homebrew (recommended)
+brew install git
+
+# Or download from git-scm.com
+```
+
+**🐧 Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install git
 ```
 
 ---
 
-## 🧰 Step 1: Get the Code (Clone the Directory)
+### Step 2: Check and Install Python
 
-First, let's get the project code on your machine. We'll clone only the specific directory you need to keep your setup lightweight.
+#### 🔍 Check if Python is Already Installed by command prompt or windows powershell
 
+
+**🪟 Windows:**
+```cmd
+python --version
+pip --version
+```
+
+**🍎🐧 macOS/Linux:**
 ```bash
-# Create a project folder
-mkdir binance-websocket-ticker
-cd binance-websocket-ticker
+python3 --version
+pip3 --version
+```
 
-# Clone only the specific directory using sparse checkout
-git clone --depth 1 --filter=blob:none --sparse https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git .
-git sparse-checkout init --cone
-git sparse-checkout set "Task 5 - Binance WebSocket Price Precision"
+#### ✅ Version Requirements
+- **Minimum Required:** Python 3.8+
+- **Recommended:** Python 3.9+ or latest stable version
+
+#### 📥 If Python is Not Installed or Version is Too Old
+
+**🪟 Windows:**
+1. **📥 Download Python:**
+   - Go to [python.org](https://www.python.org/downloads/)
+   - Download Python 3.8+ (latest stable version recommended)
+
+2. **💾 Install Python:**
+   - Run the installer
+   - ⚠️ **IMPORTANT:** Check "Add Python to PATH" during installation
+   - Choose "Install Now"
+
+3. **✅ Verify Installation:**
+   ```cmd
+   python --version
+   pip --version
+   ```
+
+**🍎 macOS:**
+```bash
+# Using Homebrew (recommended)
+brew install python
+
+# Or download from python.org
+```
+
+**🐧 Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install python3 python3-pip python3-venv
+```
+
+---
+
+### Step 3: Check and Install PostgreSQL 
+
+#### 🔍 Check if PostgreSQL is Already Installed by command prompt or windows powershell
+
+**🪟🍎🐧 All Platforms:**
+```bash
+psql --version
+```
+
+#### ✅ Version Requirements
+- **Minimum Required:** PostgreSQL 12+
+- **Recommended:** PostgreSQL 14+ or latest stable version
+
+#### 📥 If PostgreSQL is Not Installed or Version is Too Old
+
+**🪟 Windows:**
+1. **📥 Download PostgreSQL:**
+   - Go to [postgresql.org/download/windows](https://www.postgresql.org/download/windows/)
+   - Download the latest stable version
+
+2. **💾 Install PostgreSQL:**
+   - Run the installer
+   - Remember the password you set for the `postgres` user
+   - Default port 5432 is usually fine
+   - Install pgAdmin (database management tool) when offered
+
+3. **✅ Verify Installation:**
+   ```cmd
+   psql --version
+   ```
+
+**🍎 macOS:**
+```bash
+# Using Homebrew
+brew install postgresql
+
+# Start PostgreSQL service
+brew services start postgresql
+
+# Verify installation
+psql --version
+```
+
+**🐧 Linux (Ubuntu/Debian):**
+```bash
+sudo apt update
+sudo apt install postgresql postgresql-contrib
+
+# Start PostgreSQL service
+sudo systemctl start postgresql
+sudo systemctl enable postgresql
+
+# Verify installation
+psql --version
+```
+
+---
+
+### Step 4: Get the Code
+
+#### 📥 Clone the Repository
+
+> **⚠️ Note:**  
+> On Windows, you should open Command Prompt or PowerShell in a folder where you have full write permissions. This can be your user folder (like `C:\Users\YourUsername`), a subfolder (such as `C:\Users\YourUsername\Projects`), or any other folder you create on other drives (for example, `D:\Projects`, `E:\Crypto`, etc.).  
+>  
+> **Do not** run commands from system folders like `C:\Windows\System32`—this may cause permission errors.
+
+**🪟 Windows:**
+```cmd
+# Navigate to your desired location
+cd C:\Users\YourUsername\Projects
+
+# Clone the repository
+git clone https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
 
 # Navigate to the project files
-cd "Task 5 - Binance WebSocket Price Precision/binance-websocket-ticker"
+cd "AI-Backend-Hiring-Tasks-Prodigal-AI\Task 5 - Binance WebSocket Price Precision\binance-websocket-ticker"
 ```
 
-**Verify your setup:**
-
-**On Windows:**
-```cmd
-# Check if you're in the right directory
-dir
-
-# You should see files like: binance_ws_influxdb.py, requirements.txt, README.md.
-```
-
-**On Linux/macOS:**
+**🍎🐧 macOS/Linux:**
 ```bash
-# Check if you're in the right directory
-ls -la
+# Navigate to your desired location
+cd ~/Projects
 
-# You should see files like: binance_ws_influxdb.py, requirements.txt, README.md.
+# Open the command prompt in that directory and clone the repository
+git clone https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
+
+# Navigate to the project files
+cd "AI-Backend-Hiring-Tasks-Prodigal-AI/Task 5 - Binance WebSocket Price Precision/binance-websocket-ticker"
 ```
+
+#### 📂 Verify Your Setup
+
+**🪟 Windows:**
+```cmd
+dir
+```
+
+**🍎🐧 macOS/Linux:**
+```bash
+ls -la
+```
+
+**✅ You should see files like:**
+- `binance_ws_postgres.py` (main application)
+- `requirements.txt` (Python dependencies)
+- `README.md` (this file)
 
 ---
 
-## 📦 Step 2: Install Required Python Packages
+### Step 5: Create Database and User
 
-Setting up a virtual environment is crucial to avoid conflicts with your system Python packages and keep your project dependencies isolated.
+#### 🔐 Access PostgreSQL
 
-### 🐍 Option A: Using Python venv (Recommended for most users)
+**🪟 Windows:**
+```cmd
+# Using terminal
+psql -U postgres
 
-**Create and activate virtual environment:**
+# Or find "SQL Shell (psql)" in Start Menu
+```
 
-**On Windows PowerShell:**
+**🍎🐧 macOS/Linux:**
+```bash
+# Access PostgreSQL as postgres user
+sudo -u postgres psql
+
+# Or if you installed via Homebrew on macOS:
+psql postgres
+```
+
+#### 🗄️ Create Database and User
+
+Once in the PostgreSQL shell (you'll see `postgres=#`), run these commands:
+
+```sql
+-- Create a new database for our project
+CREATE DATABASE binance_ticker_db;
+
+-- Create a new user with a secure password
+CREATE USER binance_user WITH PASSWORD 'your_secure_password_here';
+
+-- Grant all privileges on the database to our user
+GRANT ALL PRIVILEGES ON DATABASE binance_ticker_db TO binance_user;
+
+-- Grant connection privileges
+GRANT CONNECT ON DATABASE binance_ticker_db TO binance_user;
+
+-- Exit PostgreSQL shell
+\q
+```
+
+#### 🧪 Test the Connection
+```bash
+# Test connecting with your new user
+psql -h localhost -U binance_user -d binance_ticker_db
+
+# It will ask to enter the Password for user binance_user
+```
+
+**💡 Tips:**
+- Replace `your_secure_password_here` with a strong password
+- Write down your database credentials - you'll need them for configuration
+- If you prefer, you can use the default `postgres` user instead
+
+---
+
+### Step 6: Set Up Python Virtual Environment
+
+Virtual environments keep your project dependencies isolated and prevent conflicts with other Python projects.
+
+#### 🐍 Create Virtual Environment
+
+**🪟 Windows PowerShell:**
 ```powershell
 # Create virtual environment
 python -m venv binance_env
@@ -169,561 +404,499 @@ python -m venv binance_env
 
 # If you get execution policy error, run this first:
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
-
-# Then try activation again:
-.\binance_env\Scripts\Activate.ps1
-
-# You should see (binance_env) at the beginning of your command prompt
 ```
 
-**On Windows Command Prompt (CMD):**
+**🪟 Windows Command Prompt / terminal:**
 ```cmd
 # Create virtual environment
 python -m venv binance_env
 
 # Activate the virtual environment
 binance_env\Scripts\activate.bat
-
-# You should see (binance_env) at the beginning of your command prompt
 ```
 
-**On Linux/macOS:**
+**🍎🐧 macOS/Linux:**
 ```bash
 # Create virtual environment
 python3 -m venv binance_env
 
 # Activate the virtual environment
 source binance_env/bin/activate
-
-# You should see (binance_env) at the beginning of your terminal prompt
 ```
 
-### 🐍 Option B: Using Conda (If you have Anaconda/Miniconda installed)
+#### ✅ Verify Activation
+After activation, you should see `(binance_env)` at the beginning of your terminal.
 
+#### 📋 Install Required Packages
+
+With your virtual environment activated:
+
+**🎯 Method A: Install from requirements.txt (Recommended)**
 ```bash
-# Create conda environment with Python 3.8+
-conda create -n binance_env python=3.9
-
-# Activate the conda environment
-conda activate binance_env
-
-# You should see (binance_env) at the beginning of your terminal prompt
-```
-
-### 📋 Install Required Packages
-
-Once your virtual environment is activated, install the required packages:
-
-#### Method A: Install from requirements.txt (Recommended)
-
-```bash
-# Make sure your virtual environment is activated first!
-# You should see (binance_env) in your prompt
 pip install -r requirements.txt
 ```
 
-#### Method B: Install packages individually
-
+**🔧 Method B: Install packages individually**
 ```bash
-# Install each package manually (virtual environment should be activated)
 pip install websockets==12.0
-pip install influxdb-client==1.49.0
-pip install python-dotenv==1.1.0
+pip install asyncpg==0.29.0
+pip install python-dotenv==1.0.0
 ```
 
-### ✅ Verify Installation
-
+#### 🔍 Verify Installation
 ```bash
-# Check if packages are installed correctly in your virtual environment
-python -c "import websockets, influxdb_client, dotenv; print('All packages installed successfully!')"
-
-# Check which Python interpreter you're using (should show your virtual environment path)
-which python    # On Linux/macOS
-where python    # On Windows
-```
-
-### 🔄 Managing Your Virtual Environment
-
-**To deactivate the virtual environment when you're done:**
-```bash
-deactivate
-```
-
-**To reactivate it later (whenever you want to run the streamer):**
-
-**On Windows PowerShell:**
-```powershell
-.\binance_env\Scripts\Activate.ps1
-```
-
-**On Windows Command Prompt:**
-```cmd
-binance_env\Scripts\activate.bat
-```
-
-**On Linux/macOS:**
-```bash
-source binance_env/bin/activate
-```
-
-**For Conda users:**
-```bash
-conda activate binance_env
-```
-
-### 📝 Important Notes
-
-- ⚠️ **Always activate your virtual environment** before running the streamer script
-- 🔍 **Verify activation:** You should see `(binance_env)` at the beginning of your command prompt
-- 📦 **Package isolation:** Packages installed in this environment won't affect your system Python
-- 🗂️ **Environment location:** The `binance_env` folder will be created in your current directory
-
-### 🚨 Troubleshooting Virtual Environments & Package Installation
-
-#### Common Error: "ModuleNotFoundError: No module named 'websockets'"
-
-**Problem:** You see this error even after installing packages:
-```
-Traceback (most recent call last):
-  File "<string>", line 1, in <module>
-ModuleNotFoundError: No module named 'websockets','influxdb-client'
-```
-
-**Solution Steps:**
-
-1. **First, verify your virtual environment is actually activated:**
-   ```bash
-   # You should see (binance_env) at the start of your prompt
-   # If not, activate it:
-   
-   # Windows PowerShell:
-   .\binance_env\Scripts\Activate.ps1
-   
-   # Windows CMD:
-   binance_env\Scripts\activate.bat
-   
-   # Linux/macOS:
-   source binance_env/bin/activate
-   ```
-
-2. **Check which Python and pip you're using:**
-   ```bash
-   # Should point to your virtual environment
-   which python    # Linux/macOS
-   where python    # Windows
-   
-   which pip       # Linux/macOS  
-   where pip       # Windows
-   ```
-
-3. **Upgrade pip first:**
-   ```bash
-   python -m pip install --upgrade pip
-   ```
-
-4. **If you still face errors, upgrade your virtual environment tooling:**  
-   (Sometimes, especially on older systems, venv might be out of date.)
-   ```bash
-   python -m venv binance_env --upgrade-deps
-   ```
-
-5. **Install packages with explicit python -m pip:**
-   ```bash
-   python -m pip install websockets==12.0
-   python -m pip install influxdb-client==1.49.0
-   python -m pip install python-dotenv==1.1.0
-   ```
-
-6. **Alternative: Force reinstall all packages:**
-   ```bash
-   python -m pip install --force-reinstall websockets==12.0 influxdb-client==1.49.0 python-dotenv==1.1.0
-   ```
-
-7. **Verify installation again:**
-   ```bash
-   python -c "import websockets; print('websockets version:', websockets.__version__)"
-   python -c "import influxdb_client; print('influxdb-client imported successfully')"
-   python -c "import dotenv; print('python-dotenv imported successfully')"
-   ```
-
-#### Other Common Issues:
-
-**If you get permission errors:**
-```bash
-# On Linux/macOS, you might need:
-python3 -m pip install --user virtualenv
-python3 -m virtualenv binance_env
-
-# On Windows, try:
-py -m pip install --user virtualenv
-py -m virtualenv binance_env
-```
-
-**If `python` command is not found:**
-```bash
-# Try python3 instead of python
-python3 -m venv binance_env
-
-# Or on Windows:
-py -m venv binance_env
-```
-
-**If packages still fail to install:**
-```bash
-# Try installing with --user flag (not recommended for virtual environments, but can help diagnose)
-pip install --user websockets==12.0
-
-# Or try with --no-cache-dir
-pip install --no-cache-dir websockets==12.0
-```
-
-**To completely remove and recreate the virtual environment:**
-```bash
-# Deactivate first
-deactivate
-
-# Remove the environment folder
-rm -rf binance_env    # Linux/macOS
-rmdir /s binance_env  # Windows
-
-# For conda:
-conda env remove -n binance_env
-
-# Then recreate from scratch
-python -m venv binance_env
-```
-
-**Virtual environment not activating properly:**
-```bash
-# Windows - try different activation methods:
-binance_env\Scripts\activate.bat
-# or
-.\binance_env\Scripts\Activate.ps1
-
-# Linux/macOS - ensure you're using source:
-source binance_env/bin/activate
-# not just:
-binance_env/bin/activate
+python -c "import websockets, asyncpg, dotenv; print('All packages installed successfully!')"
 ```
 
 ---
 
-## 🥇 Step 3: Create Your InfluxDB Cloud Account
+### Step 7: Create and Configure .env.local
 
-Now let's set up your cloud database where the streaming data will be stored.
+#### 📝 Create Configuration File
 
-1. **Visit InfluxDB Cloud:** Go to [cloud2.influxdata.com/signup](https://cloud2.influxdata.com/signup)
+Create a file named `.env.local` in your project root directory (same folder as `binance_ws_postgres.py`). This file will store your database credentials and configuration.
 
-2. **Sign up using your preferred method:**
-   - Click **GOOGLE** or **MICROSOFT** for instant signup with existing accounts
-   - Or manually fill in: First Name, Last Name, Email, Password and click **CREATE ACCOUNT**
-   - If you already have an account, click **LOG IN**
+**⚠️ Important:** The `.env.local` file is not included in the repository for security reasons. You must create it yourself.
 
-3. **Set up your workspace:**
-   - **Company Name:** Enter something like "Personal" or "Prodigal AI"
-   - **Project Name:** Use "Binance WebSocket Live Feed" or similar
-   - **Storage Provider:** Choose your preferred region (e.g., AWS US East)
-   - Agree to terms and continue
-
-4. **Select a plan:**
-   - Choose **🆓 Free** (30 days storage, no credit card required)
-   - You can upgrade later if needed
-
-5. **Access the dashboard:** You'll now see the InfluxDB Cloud dashboard
-
----
-
-## 🏷️ Step 4: Set Up InfluxDB for the Project
-
-Configure your InfluxDB instance for the streaming application.
-
-### 🪣 Create a Bucket (Database)
-
-1. In the InfluxDB dashboard, navigate to **Load Data → Buckets**
-2. Click **+ Create Bucket**
-3. Configure your bucket:
-   - **Name:** `binance_ticks`
-   - **Retention Period:** Choose based on your needs:
-     - `1 day` for testing/demo
-     - `30 days` for short-term analysis
-     - `1 year` for long-term storage
-4. Click **Create**
-
-### 🌐 Get Your InfluxDB URL
-
-1. **Copy the URL** from your InfluxDB dashboard (e.g., `https://us-east-1-1.aws.cloud2.influxdata.com`)
-2. **⚠️ IMPORTANT: Create your `.env.local` file RIGHT NOW and paste this URL:**
-
-**🚨 FIXED FILE CREATION COMMANDS:**
-
-**For Windows PowerShell:**
-```powershell
-# Create .env.local file
-New-Item -ItemType File -Name ".env.local" -Force
-
-# Alternative method:
-Out-File -FilePath ".env.local" -InputObject ""
-```
-
-**For Windows Command Prompt (CMD):**
+**🪟 Windows (using Notepad):**
 ```cmd
-# Create .env.local file
-type nul > .env.local
-
-# Alternative method:
-copy con .env.local
-# Press Ctrl+Z then Enter to finish
+notepad .env.local
 ```
 
-**For Linux/macOS:**
+**🍎🐧 macOS/Linux (using nano):**
 ```bash
-# Create .env.local file
-touch .env.local
-
-# Alternative method:
-echo "" > .env.local
+nano .env.local
 ```
 
-**Open `.env.local` in your text editor and immediately add:**
-```bash
-INFLUXDB_URL=https://us-east-1-1.aws.cloud2.influxdata.com
-INFLUXDB_TOKEN=placeholder-will-add-token-next
-INFLUXDB_ORG=company-name
-INFLUXDB_BUCKET=binance_ticks
+#### ⚙️ Add Configuration
+
+Copy and paste this configuration, replacing the values with your actual database credentials:
+
+```env
+# PostgreSQL Database Configuration
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DB=binance_ticker_db
+POSTGRES_USER=binance_user
+POSTGRES_PASSWORD=your_secure_password_here
+
+# Binance WebSocket URL (you can modify the trading pairs)
 BINANCE_WS_URL=wss://stream.binance.com:9443/stream?streams=btcusdt@trade/ethusdt@trade
 ```
 
-**Replace the example URL with your actual copied URL and save the file.**
+#### 🔧 Configuration Options
 
-### 🔑 Create an API Token
+**📊 Trading Pairs:**
+You can modify the `BINANCE_WS_URL` to include different trading pairs:
 
-1. Navigate to **Load Data → API Tokens**
-2. Click **+ Generate API Token**
-3. Select **All Access Token** (for initial setup)
-4. Provide a description:
-   ```
-   Binance WebSocket Streamer - Write access to binance_ticks bucket
-   ```
-5. Click **Save**
-6. **⚠️ CRITICAL: Copy the token and IMMEDIATELY update your `.env.local` file:**
-   
-   **Replace the placeholder token line in your `.env.local` file:**
-   ```bash
-   # Change this line:
-   INFLUXDB_TOKEN=placeholder-will-add-token-next
-   
-   # To this (with your actual token):
-   INFLUXDB_TOKEN=your-actual-api-token-here
-   ```
-   
-   **Save the file immediately - you won't see this token again!**
+```env
+# Single pair
+BINANCE_WS_URL=wss://stream.binance.com:9443/stream?streams=btcusdt@trade
 
-### ✅ Verify Your Configuration
-
-Your final `.env.local` file should look like this:
-```bash
-INFLUXDB_URL=https://us-east-1-1.aws.cloud2.influxdata.com
-INFLUXDB_TOKEN=your-actual-api-token-here
-INFLUXDB_ORG=company-name
-INFLUXDB_BUCKET=binance_ticks
-BINANCE_WS_URL=wss://stream.binance.com:9443/stream?streams=btcusdt@trade/ethusdt@trade
+# Multiple pairs
+BINANCE_WS_URL=wss://stream.binance.com:9443/stream?streams=btcusdt@trade/ethusdt@trade/adausdt@trade/dotusdt@trade
 ```
 
-**🔒 Security Setup:**
-
-**For Windows PowerShell:**
-```powershell
-# Add .env.local to .gitignore to prevent accidental commits
-Add-Content -Path ".gitignore" -Value ".env.local"
-```
-
-**For Windows CMD:**
-```cmd
-# Add .env.local to .gitignore to prevent accidental commits
-echo .env.local >> .gitignore
-```
-
-**For Linux/macOS:**
-```bash
-# Add .env.local to .gitignore to prevent accidental commits
-echo ".env.local" >> .gitignore
-```
-
-**⚠️ Important Configuration Rules:**
-
-- **Replace ALL placeholder values** with your actual values
-- **No quotes around values**
-- **No spaces around the `=` sign**
-- **If you modify `.env.local` while the script is running, restart the Python script**
-- **Add more trading pairs** by extending the `BINANCE_WS_URL` streams parameter
-
-**🚨 Common File Creation Errors and Solutions:**
-
-**Error in PowerShell: "The term 'echo.' is not recognized"**
-```
-echo. : The term 'echo.' is not recognized as the name of a cmdlet, function, script file, or operable program.
-```
-**Solution:** Use the PowerShell-specific commands provided above:
-```powershell
-New-Item -ItemType File -Name ".env.local" -Force
-```
-
-**Error in CMD: "The system cannot find the file specified"**
-**Solution:** Use the CMD-specific commands:
-```cmd
-type nul > .env.local
-```
-
-**Error: "Access is denied" or "Permission denied"**
-**Solution:** Run your terminal as administrator or use alternative methods:
-```bash
-# Try creating in a different location first, then move
-cd %USERPROFILE%
-echo. > temp.env
-move temp.env path\to\your\project\.env.local
-```
+**⚠️ Important Notes:**
+- **Do not use quotes** around values
+- **No spaces** around the `=` sign
+- **Add `.env.local` to `.gitignore`** to keep credentials safe
+- 💡 Replace `your_secure_password_here` with your actual PostgreSQL password
 
 ---
 
-## 🧠 Step 5: Understanding the Code
+## 🧠 Understanding the Code
 
-Before running the streamer, let's understand what the code does:
+### 🔧 Core Components
 
-### Key Components:
-
-- **🔗 WebSocket Connection:** Connects to Binance's real-time trade stream for specified trading pairs
-- **🎯 Data Processing:** Each trade tick contains:
-  - **Symbol:** Trading pair (e.g., BTCUSDT)
-  - **Price:** Stored as both string (full precision) and float (for queries)
-  - **Timestamp:** Millisecond-precision UTC timestamp
-- **🛡️ Error Handling:** 
-  - Auto-reconnects on connection drops
-  - Validates and skips malformed messages
-  - Logs all activities for monitoring
-- **☁️ InfluxDB Integration:** Writes validated ticks to the `price_ticks` measurement
-
-### Main Script Flow:
-
+**1. 🌐 WebSocket Connection Management**
 ```python
-1. Load environment variables from .env.local
-2. Connect to Binance WebSocket
-3. For each received trade tick:
-   a. Parse and validate the data
-   b. Extract symbol, price, and timestamp
-   c. Write to InfluxDB Cloud
-   d. Log the activity
-4. Handle errors and reconnect as needed
+# Connects to Binance's real-time trade stream
+async with websockets.connect(BINANCE_WS_URL) as ws:
+    # Handles reconnection automatically on disconnects
 ```
+
+**2. 📈 Tick Data Processing**
+Each trade tick contains:
+- **📊 Symbol:** Trading pair (e.g., "BTCUSDT")
+- **💰 Price:** Trade price (stored as both string and decimal for precision)
+- **🕒 Timestamp:** Millisecond-precision UTC timestamp
+
+**3. 🗄️ Database Storage**
+```python
+# High-precision storage with millisecond timestamps
+INSERT INTO price_ticks (symbol, price_str, price, ts)
+VALUES ($1, $2, $3, $4);
+```
+
+**4. 🛡️ Error Handling**
+- **🔄 Auto-reconnect:** Automatically reconnects on connection drops
+- **✅ Data validation:** Skips malformed messages with logging
+- **⚡ Connection pooling:** Efficient database connection management
+
+### 🔄 Data Flow
+1. **🔗 Connect** to Binance WebSocket stream
+2. **📥 Receive** real-time trade messages
+3. **🔍 Parse** and validate each message
+4. **⚙️ Convert** timestamp and price data
+5. **💾 Store** in PostgreSQL with full precision
+6. **📝 Log** successful writes and handle errors
 
 ---
 
-## ▶️ Step 6: Running the Streamer
+## ▶️ Running the Streamer
 
-Now you're ready to start streaming live cryptocurrency data!
+### 🏁 Start the Application
 
-### Start the Streamer:
+1. **✅ Ensure your virtual environment is activated:**
+   You should see `(binance_env)` in your prompt.
 
-```bash
-python binance_ws_influxdb.py
+2. **📂 Navigate to your project directory:**
+   ```bash
+   cd /path/to/AI-Backend-Hiring-Tasks-Prodigal-AI/Task\ 5\ -\ Binance\ WebSocket\ Price\ Precision/binance-websocket-ticker
+   ```
+
+3. **🚀 Run the streamer:**
+   ```bash
+   python binance_ws_postgres.py
+   ```
+
+### 📺 Expected Output
+
+You should see output like this:
+
 ```
+Connecting to Binance WebSocket...
+✅ Connected! Streaming BTCUSDT & ETHUSDT ticks...
+Press Ctrl+C to stop.
 
-### Expected Output:
-
-You should see real-time output like:
-```
-Connected to Binance WebSocket
-Processing tick: BTCUSDT @ 68341.15000000 at 2025-06-27T10:30:15.123Z
-Processing tick: ETHUSDT @ 3456.78900000 at 2025-06-27T10:30:15.456Z
-Data written to InfluxDB successfully
-Processing tick: BTCUSDT @ 68342.00000000 at 2025-06-27T10:30:16.789Z
+[BTCUSDT] 61345.32000000 at 2025-06-30 19:05:05.123456 UTC
+[ETHUSDT] 3450.12000000 at 2025-06-30 19:05:03.789123 UTC
+[BTCUSDT] 61346.15000000 at 2025-06-30 19:05:07.456789 UTC
+[ETHUSDT] 3449.98000000 at 2025-06-30 19:05:09.123456 UTC
 ...
 ```
 
-### 🛑 To Stop the Streamer:
+### 🛑 Stop the Application
 
-Press `Ctrl+C` in your terminal.
+Press `Ctrl+C` to stop the streamer gracefully:
 
-### 🔧 Troubleshooting:
+```
+^C
+Stopped Binance WebSocket to PostgreSQL streamer.
+```
 
-- **Connection errors:** Check your internet connection and InfluxDB credentials
-- **Import errors:** Ensure all packages are installed correctly (see troubleshooting section in Step 2)
-- **Environment errors:** Verify your `.env.local` file format and values
-- **Permission errors:** Check your InfluxDB API token permissions
+### 🔄 Managing the Virtual Environment
 
----
+**❌ To deactivate when done:**
+```bash
+deactivate
+```
 
-## 📈 Visualizing and Querying Your Data
+**✅ To reactivate later:**
+```bash
+# Windows PowerShell
+.\binance_env\Scripts\Activate.ps1
 
-Once data is streaming, you can analyze and visualize it:
+# Windows CMD
+binance_env\Scripts\activate.bat
 
-### Using InfluxDB Data Explorer:
-
-1. **Navigate to Data Explorer** by clicking on the bottom slider you will see the names of the sidebars in that click on Data Explorer.
-2. **Select your bucket:** `binance_ticks`
-3. **Choose measurement:** `price_ticks`
-4. **Filter by symbol:** Select specific trading pairs
-5. **Select fields:** Choose `price` for visualization
-6. **Set time range:** Last 1 hour, 1 day, etc.
-7. **Click on Run** to see your live price charts
-
-### Integration with External Tools:
-
-- **Grafana:** Create professional dashboards
-- **Tableau:** Advanced analytics and visualization
-- **Python/Jupyter:** Custom analysis with InfluxDB client
-- **Excel/Google Sheets:** Export data for spreadsheet analysis
+# macOS/Linux
+source binance_env/bin/activate
+```
 
 ---
 
 ## 📊 Data Model
 
-Understanding how your data is structured in InfluxDB:
+### 🗄️ Table Structure
 
-### Measurement Structure:
-- **Measurement Name:** `price_ticks`
-- **Tags:** 
-  - `symbol`: Trading pair (e.g., BTCUSDT, ETHUSDT)
-- **Fields:**
-  - `price` (float): Optimized for queries and calculations
-  - `price_str` (string): Full precision as received from Binance
-- **Timestamp:** Trade execution time in UTC with millisecond precision
+**📋 Table Name:** `price_ticks`
 
-### Example Data Point:
+| Column | Type | Description |
+|--------|------|-------------|
+| `id` | SERIAL PRIMARY KEY | 🔢 Auto-incrementing unique identifier |
+| `symbol` | TEXT NOT NULL | 📊 Trading pair symbol (e.g., "BTCUSDT") |
+| `price_str` | TEXT NOT NULL | 💰 Price as string (preserves full precision) |
+| `price` | NUMERIC(30,12) NOT NULL | 📈 Price as decimal (for calculations) |
+| `ts` | TIMESTAMPTZ NOT NULL | 🕒 UTC timestamp with millisecond precision |
 
-| Time | Symbol | Price | Price String | 
-|------|--------|-------|--------------|
-| 2025-06-27T10:30:15.123Z | BTCUSDT | 68341.15 | "68341.15000000" |
-| 2025-06-27T10:30:15.456Z | ETHUSDT | 3456.789 | "3456.78900000" |
+### 🔧 SQL Schema
+
+The table is automatically created when you first run the application:
+
+```sql
+CREATE TABLE IF NOT EXISTS price_ticks (
+    id SERIAL PRIMARY KEY,
+    symbol TEXT NOT NULL,
+    price_str TEXT NOT NULL,
+    price NUMERIC(30, 12) NOT NULL,
+    ts TIMESTAMPTZ NOT NULL
+);
+```
+
+### 📋 Sample Data
+
+| id | symbol | price_str | price | ts |
+|----|--------|-----------|-------|-----|
+| 1 | BTCUSDT | 61345.32000000 | 61345.320000000000 | 2025-06-30 19:05:05.123456+00 |
+| 2 | ETHUSDT | 3450.12000000 | 3450.120000000000 | 2025-06-30 19:05:07.789123+00 |
+
+---
+
+## 📈 Querying Your Data
+
+### 🔗 Connect to PostgreSQL
+
+```bash
+# Connect to your database
+psql -h localhost -U binance_user -d binance_ticker_db
+```
+
+### 📊 Basic Queries
+
+**👀 View recent trades:**
+```sql
+SELECT * FROM price_ticks 
+ORDER BY ts DESC 
+LIMIT 10;
+```
+
+**📊 Count total trades:**
+```sql
+SELECT COUNT(*) as total_trades FROM price_ticks;
+```
+
+**📈 Trades by symbol:**
+```sql
+SELECT symbol, COUNT(*) as trade_count 
+FROM price_ticks 
+GROUP BY symbol 
+ORDER BY trade_count DESC;
+```
+
+**💰 Price range for a symbol:**
+```sql
+SELECT 
+    symbol,
+    MIN(price) as min_price,
+    MAX(price) as max_price,
+    AVG(price) as avg_price
+FROM price_ticks 
+WHERE symbol = 'BTCUSDT'
+GROUP BY symbol;
+```
+
+**🕒 Recent trades with time formatting:**
+```sql
+SELECT 
+    symbol,
+    price,
+    TO_CHAR(ts, 'YYYY-MM-DD HH24:MI:SS.MS TZ') as formatted_time
+FROM price_ticks 
+ORDER BY ts DESC 
+LIMIT 5;
+```
+
+**⏰ Trades in the last hour:**
+```sql
+SELECT * FROM price_ticks 
+WHERE ts >= NOW() - INTERVAL '1 hour'
+ORDER BY ts DESC;
+```
+
+### 🔍 Advanced Analytics
+
+**📊 Price movements over time:**
+```sql
+SELECT 
+    symbol,
+    DATE_TRUNC('minute', ts) as minute,
+    COUNT(*) as trades,
+    MIN(price) as low,
+    MAX(price) as high,
+    FIRST(price ORDER BY ts) as open,
+    LAST(price ORDER BY ts) as close
+FROM price_ticks 
+WHERE ts >= NOW() - INTERVAL '1 hour'
+GROUP BY symbol, minute
+ORDER BY symbol, minute;
+```
+
+---
+
+## 🚨 Troubleshooting
+
+### 🔧 Common Issues and Solutions
+
+#### 1. **❌ ModuleNotFoundError: No module named 'websockets'**
+
+**🔍 Problem:** Python can't find the required modules.
+
+**✅ Solution:**
+```bash
+# Ensure virtual environment is activated (you should see (binance_env) in prompt)
+source binance_env/bin/activate  # Linux/macOS
+# or
+.\binance_env\Scripts\Activate.ps1  # Windows
+
+# Reinstall packages
+pip install -r requirements.txt
+
+# Verify installation
+python -c "import websockets, asyncpg, dotenv; print('Success!')"
+```
+
+#### 2. **🔌 Connection refused to PostgreSQL**
+
+**🔍 Problem:** Can't connect to PostgreSQL database.
+
+**✅ Solutions:**
+- **🔍 Check PostgreSQL is running:**
+  ```bash
+  # Linux/macOS
+  sudo systemctl status postgresql
+  
+  # macOS with Homebrew
+  brew services list | grep postgresql
+  
+  # Windows - check Services app for "postgresql" service
+  ```
+
+- **🧪 Verify database credentials:**
+  ```bash
+  # Test connection manually
+  psql -h localhost -U binance_user -d binance_ticker_db
+  ```
+
+- **📝 Check `.env.local` file:**
+  - Ensure no quotes around values
+  - Verify password matches what you set
+  - Check for typos in database name/username
+
+#### 3. **🌐 WebSocket connection errors**
+
+**🔍 Problem:** Can't connect to Binance WebSocket.
+
+**✅ Solutions:**
+- **🌐 Check internet connection**
+- **🔍 Verify Binance URL in `.env.local`**
+- **🛡️ Check firewall/antivirus settings**
+- **🔄 Try a different network (sometimes corporate firewalls block WebSocket connections)**
+
+#### 4. **🔒 Permission denied errors**
+
+**🔍 Problem:** Can't create virtual environment or install packages.
+
+**✅ Solutions:**
+```bash
+# Linux/macOS - ensure you have permission to write in current directory
+sudo chown -R $USER:$USER ~/Projects/AI-Backend-Hiring-Tasks-Prodigal-AI
+
+# Windows - run Command Prompt as Administrator
+
+# Alternative: use --user flag (not recommended for virtual environments)
+pip install --user websockets asyncpg python-dotenv
+```
+
+#### 5. **🔄 Virtual environment not activating**
+
+**🔍 Problem:** Virtual environment activation fails.
+
+**✅ Solutions:**
+```bash
+# Windows - try different methods
+.\binance_env\Scripts\activate.bat
+# or
+.\binance_env\Scripts\Activate.ps1
+
+# Linux/macOS - ensure you're using 'source'
+source binance_env/bin/activate
+
+# If still failing, recreate the environment
+rm -rf binance_env
+python3 -m venv binance_env
+```
+
+#### 6. **🗄️ Database table creation errors**
+
+**🔍 Problem:** Can't create the `price_ticks` table.
+
+**✅ Solutions:**
+```sql
+-- Connect to PostgreSQL and manually grant permissions
+\c binance_ticker_db
+GRANT ALL PRIVILEGES ON SCHEMA public TO binance_user;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO binance_user;
+GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO binance_user;
+```
+
+#### 7. **📦 ModuleNotFoundError: No module named 'pip._internal'**
+
+**🔍 Problem:**  
+Your virtual environment is missing pip, or pip is corrupted.
+
+**✅ Solutions:**
+- **🔄 Delete and recreate the virtual environment using Python 3.8 or newer:**
+  ```cmd
+  rmdir /s /q binance_env
+  python -m venv binance_env
+  binance_env\Scripts\activate
+  python -m pip install --upgrade pip
+  pip install -r requirements.txt
+  ```
+- **🐍 Make sure you are using Python 3.8 or newer,** not Python 3.7 or below.
+- If you have multiple Python versions, specify the right one:
+  ```cmd
+  py -3.8 -m venv binance_env
+  ```
+
+**❓ Why this happens:**  
+This occurs if pip isn't installed properly in the virtual environment, or if you're using an outdated Python version.
+
+### 🔍 Debug Mode
+
+Add this to your `.env.local` for more detailed logging:
+```env
+DEBUG=True
+```
+
+Then modify the script to add more verbose output:
+```python
+import logging
+logging.basicConfig(level=logging.DEBUG)
+```
+
+### 🆘 Getting Help
+
+If you're still having issues:
+
+1. **🔍 Check the error message carefully** - it usually contains the solution
+2. **✅ Verify each step** - ensure you didn't skip anything
+3. **🧪 Test components individually:**
+   - Test PostgreSQL connection separately
+   - Test internet connectivity
+   - Verify Python environment setup
 
 ---
 
 ## 🔒 Security Notes
 
-Protect your setup and data:
+### 🗄️ Database Security
+- **🔐 Use strong passwords** for your PostgreSQL user (mix of letters, numbers, symbols)
+- **🔒 Restrict database access** to localhost only for development
+- **❌ Never commit `.env.local`** to version control
+- **🌐 Use environment variables** in production, not `.env.local` files
 
-### API Token Security:
-- 🚫 **Never commit** `.env.local` to version control
-- 🔒 **Use minimum permissions** for production tokens
-- 🔄 **Rotate tokens regularly** for enhanced security
-- 📋 **Store backups securely** in password managers
+### 🛡️ Network Security
+- **🔥 Firewall rules:** Ensure PostgreSQL port (5432) is not exposed to the internet
+- **🔒 VPN usage:** Consider using a VPN if running on public networks
+- **🔐 HTTPS only:** The Binance WebSocket connection uses WSS (secure WebSocket)
 
-### Environment Variables Best Practices:
-```bash
-# Good: Use environment variables
-INFLUXDB_TOKEN=your_token_here
-
-# Bad: Hardcode in source code
-token = "your_token_here"  # Never do this!
-```
-
----
-
-## 📬 Contact
-
-For questions, suggestions, or collaboration:
-
-- 📧 **Email:** [pavansai7654321@gmail.com](mailto:pavansai7654321@gmail.com)
-- 🐛 **Issues:** Open an issue in this repository
+### 🔧 Code Security
+- **🔄 Keep dependencies updated:** Regularly update Python packages
+- **👀 Code review:** Review any modifications before running in production
+- **💾 Backup data:** Regularly backup your PostgreSQL database
 
 ---
 
@@ -731,8 +904,34 @@ For questions, suggestions, or collaboration:
 
 This project is **not open source**. All rights reserved.
 
-See the [LICENSE](../../LICENSE) file for details.
+### See the [LICENSE](../../LICENSE) file for details.
+---
 
 ---
 
-**🎉 Congratulations! You now have a professional-grade cryptocurrency data streaming system! 🚀💹**
+## 📬 Contact
+
+### 🆘 Get Help & Support
+
+**🔧 For technical questions or issues:**
+- 📧 **Email:** pavansai7654321@gmail.com
+- 🐛 **Bug Reports:** Create an issue with detailed error logs
+- 💡 **Feature Requests:** Describe your use case and requirements
+
+**🤝 For collaboration or commercial use:**
+- **Partnerships:** Contact for enterprise implementations
+- **Custom Development:** Available for custom features or integrations
+- **Consulting:** Data pipeline architecture and optimization
+
+### ⏰ Response Times
+- **🐛 Bug reports:** 24-48 hours
+- **❓ General questions:** 2-3 business days
+- **💡 Feature requests:** 1 week for initial feedback
+
+---
+
+**⭐ If this project helps you, please consider giving it a star!**
+
+**🔔 Watch the repository for updates and new features.**
+
+---

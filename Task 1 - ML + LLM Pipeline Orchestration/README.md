@@ -39,6 +39,15 @@
 - [🔍 How Each Service Works](#-how-each-service-works)
 - [🐞 Common Issues and Solutions](#-common-issues-and-solutions)
 - [🚦 Advanced Usage](#-advanced-usage)
+- [🚀 Using the RAG Services UI (Swagger UI, Postman, or API Client)](#-using-the-rag-services-ui-swagger-ui-postman-or-api-client-)
+  - [🗂️ Step 1: Switch Context (Choose Dataset)](#-step-1-switch-context-choose-dataset)
+  - [📥 Step 2: Ingest Your Dataset (CSV)](#-step-2-ingest-your-dataset-csv)
+  - [💬 Step 3: Ask Questions (`/rag_query`)](#-step-3-ask-questions-rag_query)
+- [🧪 Sample Questions to Test in RAG Services UI](#-sample-questions-to-test-in-rag-services-ui)
+- [🏆 Best Practices & Pro Tips](#-best-practices--pro-tips)
+- [🗂️ RAG Services UI Workflow Recap](#-rag-services-ui-workflow-recap)
+- [📝 Appendix: Example Commands & API Requests](#-appendix-example-commands--api-requests)
+- [✨ FAQ](#-faq)
 - [⚖️ License](#-license)
 - [👤 Contact](#-contact)
 
@@ -666,24 +675,108 @@ docker system prune -a -f --volumes
 
 ---
 
-## ⚖️ License 📜
+## 🚀 Using the RAG Services UI (Swagger UI, Postman, or API Client) 🤖🦾
 
-> 🛑 **This project is _not open source_. All rights reserved.**
+The RAG Service exposes a powerful API for question-answering and document ingestion. Here’s how to interact with the service directly (not using the Demo UI):
 
-See the [LICENSE](../../LICENSE) file for details.
+### 🗂️ Step 1: Switch Context (Choose Dataset)
+
+1. Go to [RAG Swagger UI](http://localhost:8000/docs) or use any API client (like Postman).
+2. Use the `POST /switch_context` endpoint.
+3. Example request body for Titanic:
+   ```json
+   {
+     "dataset": "titanic"
+   }
+   ```
+   Example for Wine:
+   ```json
+   {
+     "dataset": "wine"
+   }
+   ```
+4. ✅ Wait for the success message. Always switch context before uploading or querying to ensure you’re working with the right dataset!
 
 ---
 
-## 👤 Contact 🙋
+### 📥 Step 2: Ingest Your Dataset (CSV)
 
-**Pavan Sai** 👨‍💻
-
-📧 **Email**: [pavansai7654321@gmail.com](mailto:pavansai7654321@gmail.com)  
-🐙 **GitHub**: [@Pavansai20054](https://github.com/Pavansai20054)  
+1. Use `POST /ingest_csv` to upload your dataset file (e.g., `titanic.csv` or `winequality-red.csv`).
+2. In Swagger UI, click "Try it out", then select your file and execute.
+3. You should receive a response with `status: success`, the filename, chunk count, and the active dataset.
+4. 🟢 **Tip:** Re-ingest if you update your dataset!
 
 ---
 
-# 📝 Appendix: Example Commands & API Requests
+### 💬 Step 3: Ask Questions (`/rag_query`)
+
+1. Use `POST /rag_query` for natural language queries.
+2. Example request body:
+   ```json
+   {
+     "query": "Who had a higher chance of survival: males or females?",
+     "top_k": 3
+   }
+   ```
+3. The response will include:
+   - The synthesized answer (from the model/context).
+   - The top K context items used.
+   - Dataset information and context count.
+
+---
+
+## 🧪 Sample Questions to Test in RAG Services UI
+
+### 🚢 Titanic Dataset
+
+- "Who had a higher chance of survival: males or females?"
+- "How does age affect the survival rate in the Titanic dataset?"
+- "What does the 'Pclass' column represent?"
+- "List the possible values for 'Embarked' and their meanings."
+- "What is the meaning of the 'Fare' column?"
+- "What is the range of ages for Titanic passengers?"
+- "Explain the significance of the 'SibSp' column."
+- "Give a summary of the Titanic dataset."
+- "What are the most important factors for survival?"
+- "Who were more likely to survive: children or adults?"
+
+### 🍷 Wine Quality Dataset
+
+- "What affects wine quality most in the dataset?"
+- "What does 'residual sugar' mean in the wine dataset?"
+- "How does alcohol content relate to wine quality?"
+- "What is the typical range of pH values in the dataset?"
+- "Describe the meaning of the 'sulphates' column."
+- "What is the range of 'chlorides' values in the data?"
+- "Which features are most associated with high quality wines?"
+- "What is the meaning of 'density' in the wine dataset?"
+- "How many unique values are there in the 'quality' column?"
+- "Which variable shows the greatest variation across samples?"
+
+---
+
+## 🏆 Best Practices & Pro Tips
+
+- 🔄 **Always switch context** before any new dataset operation (upload, query).
+- 📥 **Ingest your CSV** after switching or updating datasets.
+- 💡 **Ask clear, specific questions** for best results.
+- 🧠 **Try both analytical and definitional questions** to see the full power of the RAG system.
+- 🔍 **If you get "not available" answers**, check that your data and schema are well-ingested and try adding more context or rephrasing your query.
+- 📝 **Use the Swagger UI's "Try it out" for quick testing** or use Postman/cURL for automation.
+
+---
+
+## 🗂️ RAG Services UI Workflow Recap
+
+| Step             | Action                             | Endpoint               | Example/Tip                                             |
+|------------------|------------------------------------|------------------------|---------------------------------------------------------|
+| Switch Context   | Choose Titanic or Wine dataset     | POST `/switch_context` | `{ "dataset": "titanic" }` or `{ "dataset": "wine" }`   |
+| Ingest CSV       | Upload the dataset file            | POST `/ingest_csv`     | Use "Try it out" or Postman to upload                   |
+| Query RAG        | Ask your question                  | POST `/rag_query`      | See sample questions above                              |
+
+---
+
+## 📝 Appendix: Example Commands & API Requests
 
 ```sh
 # Test RAG API
@@ -709,7 +802,7 @@ docker-compose logs mlflow
 
 ---
 
-# ✨ FAQ
+## ✨ FAQ
 
 **Q: Can I use a different database for Airflow/MLflow?**  
 A: Yes, update the database URI in `docker-compose.yml` and ensure the service can access the new DB.
@@ -722,5 +815,22 @@ A: Yes, edit the port mappings in `docker-compose.yml`.
 
 **Q: How do I update dependencies?**  
 A: Edit `requirements.txt` and rebuild affected services with `docker-compose build`.
+
+---
+
+## ⚖️ License 📜
+
+> 🛑 **This project is _not open source_. All rights reserved.**
+
+See the [LICENSE](../../LICENSE) file for details.
+
+---
+
+## 👤 Contact 🙋
+
+**Pavan Sai** 👨‍💻
+
+📧 **Email**: [pavansai7654321@gmail.com](mailto:pavansai7654321@gmail.com)  
+🐙 **GitHub**: [@Pavansai20054](https://github.com/Pavansai20054)  
 
 ---

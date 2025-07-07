@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RAG Query Demo</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      padding: 40px;
+      animation: fadeIn 0.8s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h2 {
+      text-align: center;
+      color: #4a5568;
+      margin-bottom: 30px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .form-container {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      margin-bottom: 30px;
+      border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #4a5568;
+      font-size: 1.1rem;
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 15px 20px;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      background: #f7fafc;
+    }
+
+    input[type="text"]:focus, input[type="number"]:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      background: white;
+      transform: translateY(-2px);
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea, #764ba2, #f093fb);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 10px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      width: 100%;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .result-section {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(102, 126, 234, 0.1);
+    }
+
+    .result-section h3 {
+      color: #4a5568;
+      margin-bottom: 20px;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    #result {
+      background: #f8fafc;
+      border: 2px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.95rem;
+      line-height: 1.6;
+      min-height: 100px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      color: #4a5568;
+      transition: all 0.3s ease;
+    }
+
+    .error {
+      background: #fed7d7;
+      border-color: #e53e3e;
+      color: #c53030;
+    }
+
+    .success {
+      background: #c6f6d5;
+      border-color: #38a169;
+      color: #2f855a;
+    }
+
+    .loading {
+      background: #bee3f8;
+      border-color: #3182ce;
+      color: #2c5282;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 20px;
+      align-items: end;
+    }
+
+    .input-group .form-group {
+      flex: 1;
+    }
+
+    .input-group .form-group:last-child {
+      flex: 0 0 150px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 20px;
+        margin: 10px;
+      }
+
+      h2 {
+        font-size: 2rem;
+      }
+
+      .form-container,
+      .result-section {
+        padding: 20px;
+      }
+
+      .input-group {
+        flex-direction: column;
+        gap: 0;
+      }
+
+      .input-group .form-group:last-child {
+        flex: 1;
+      }
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding: 10px;
+      }
+
+      .container {
+        padding: 15px;
+      }
+
+      h2 {
+        font-size: 1.75rem;
+      }
+
+      .form-container,
+      .result-section {
+        padding: 15px;
+      }
+
+      input[type="text"], input[type="number"], select {
+        padding: 12px 15px;
+      }
+
+      button {
+        padding: 12px 25px;
+      }
+    }
+
+    .status-indicator {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      margin-right: 8px;
+      background: #e2e8f0;
+      transition: all 0.3s ease;
+    }
+
+    .status-indicator.loading {
+      background: #3182ce;
+      animation: pulse 1.5s infinite;
+    }
+
+    .status-indicator.success {
+      background: #38a169;
+    }
+
+    .status-indicator.error {
+      background: #e53e3e;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>RAG Query Demo</h2>
+    
+    <div class="form-container">
+      <form id="ragForm">
+        <div class="form-group">
+          <label for="dataset">Dataset:</label>
+          <select id="dataset">
+            <option value="titanic" selected>Titanic</option>
+            <option value="wine">Wine Quality</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="query">Query:</label>
+          <input type="text" id="query" value="Explain Pclass in Titanic" autocomplete="on">
+        </div>
+        <div class="form-group">
+          <label for="topk">Top K contexts:</label>
+          <input type="number" id="topk" value="3" min="1" max="10">
+        </div>
+        <button type="submit">Ask Question</button>
+      </form>
+    </div>
+
+    <div class="result-section">
+      <h3>
+        <span class="status-indicator" id="statusIndicator"></span>
+        Response
+      </h3>
+      <pre id="result">(waiting...)</pre>
+    </div>
+  </div>
+
+  <script>
+    // Remember last selected dataset to avoid unnecessary API calls
+    let lastDataset = document.getElementById('dataset').value;
+
+    async function switchContextIfNeeded(selectedDataset) {
+      if (selectedDataset !== lastDataset) {
+        const res = await fetch('/switch_context', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ dataset: selectedDataset })
+        });
+        if (!res.ok) {
+          let errText = await res.text();
+          throw new Error('Switch context failed: ' + errText);
+        }
+        lastDataset = selectedDataset;
+      }
+    }
+
+    document.getElementById('ragForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const resultBox = document.getElementById('result');
+      const statusIndicator = document.getElementById('statusIndicator');
+      const selectedDataset = document.getElementById('dataset').value;
+
+      resultBox.className = 'loading';
+      statusIndicator.className = 'status-indicator loading';
+      resultBox.textContent = 'Loading...';
+
+      try {
+        await switchContextIfNeeded(selectedDataset);
+
+        const res = await fetch('/rag_query', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            query: document.getElementById('query').value,
+            top_k: Number(document.getElementById('topk').value)
+          })
+        });
+        
+        if (!res.ok) {
+          let errText = await res.text();
+          throw new Error('HTTP ' + res.status + ': ' + errText);
+        }
+        
+        const data = await res.json();
+        resultBox.className = 'success';
+        statusIndicator.className = 'status-indicator success';
+        resultBox.textContent =
+          'Answer: ' + data.synthesized_answer + '\n\n' +
+          'Context(s):\n- ' + data.contexts.map(c => c.text).join('\n- ');
+      } catch (err) {
+        resultBox.className = 'error';
+        statusIndicator.className = 'status-indicator error';
+        resultBox.textContent = 'Error: ' + (err.message || err);
+      }
+    };
+
+    // Optionally, auto-switch context immediately on dropdown change
+    document.getElementById('dataset').addEventListener('change', async function() {
+      const resultBox = document.getElementById('result');
+      const statusIndicator = document.getElementById('statusIndicator');
+      resultBox.className = 'loading';
+      statusIndicator.className = 'status-indicator loading';
+      resultBox.textContent = 'Switching context...';
+      try {
+        await switchContextIfNeeded(this.value);
+        resultBox.className = '';
+        statusIndicator.className = 'status-indicator';
+        resultBox.textContent = '(waiting...)';
+      } catch (err) {
+        resultBox.className = 'error';
+        statusIndicator.className = 'status-indicator error';
+        resultBox.textContent = 'Error: ' + (err.message || err);
+      }
+    });
+  </script>
+</body>
+</html>

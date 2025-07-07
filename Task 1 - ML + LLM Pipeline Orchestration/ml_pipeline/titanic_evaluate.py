@@ -3,6 +3,7 @@ import pandas as pd
 import mlflow
 from sklearn.metrics import accuracy_score, f1_score
 import mlflow.sklearn
+import glob
 
 DATA_PREFIX = os.environ.get('DATA_PREFIX', '/data')
 
@@ -17,8 +18,18 @@ print("Experiment:", experiment)
 if experiment is None:
     raise RuntimeError("MLflow experiment not found or not created!")
 
-X_test = pd.read_csv(f'{DATA_PREFIX}/titanic_X_test.csv')
-y_test = pd.read_csv(f'{DATA_PREFIX}/titanic_y_test.csv').values.ravel()
+def load_spark_csv_as_df(path):
+    # If Spark output is a directory, load the part-*.csv file(s)
+    if os.path.isdir(path):
+        csv_files = glob.glob(f"{path}/part-*.csv")
+        if not csv_files:
+            raise FileNotFoundError(f"No CSV files found in {path}")
+        return pd.concat((pd.read_csv(f) for f in csv_files), ignore_index=True)
+    else:
+        return pd.read_csv(path)
+
+X_test = load_spark_csv_as_df(f'{DATA_PREFIX}/titanic_X_test.csv')
+y_test = load_spark_csv_as_df(f'{DATA_PREFIX}/titanic_y_test.csv').values.ravel()
 
 model = mlflow.sklearn.load_model("models:/titanic_rf_model/Latest")
 y_pred = model.predict(X_test)

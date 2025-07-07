@@ -12,4 +12,4 @@ class VectorStore:
 
     def query(self, embedding, top_k=3):
         D, I = self.index.search(np.array([embedding]).astype("float32"), top_k)
-        return [self.texts[i] for i in I[0]]
+        return [self.texts[i] for i in I[0] if i < len(self.texts)]
