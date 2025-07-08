@@ -16,11 +16,19 @@
 
 ---
 
+## ▶️ Demo Videos
+
+- [**Demo Video 1: Full ML + LLM Pipeline Orchestration**](https://drive.google.com/file/d/1R6i-6w9v-OTSZvobLzKbAg9LpDRmQ9bB/view?usp=drive_link)
+- [**Demo Video 2: RAG Service Query Demo**](https://drive.google.com/file/d/1MxvYbs7p1eOF0BvVB2xuGwEnrwSeXqFq/view?usp=drive_link)
+
+---
+
 ## 📖 Table of Contents
 
 - [📌 Introduction](#-introduction)
 - [🗺️ Architecture Overview](#-architecture-overview)
 - [🎯 Mermaid Diagram](#-mermaid-diagram)
+- [▶️ Demo Videos](#️-demo-videos)
 - [🛠️ Technology Stack](#-technology-stack)
 - [🚀 Setup and Installation](#-setup-and-installation)
   - [1️⃣ Prerequisites](#1-prerequisites)
@@ -124,6 +132,8 @@ flowchart TD
     Data -.->|Shared| Evaluate
     Data -.->|Shared| RAGService
 ```
+
+
 ---
 
 ## 🛠️ Technology Stack
@@ -133,7 +143,7 @@ flowchart TD
 - **🍱 Docker Compose** — Multi-container orchestration
 - **🌀 Apache Airflow** — Workflow orchestration and scheduling
 - **📈 MLflow** — ML experiment tracking/model registry
-- **⚡ Apache Spark** — Distributed preprocessing
+- **⚡ Apache Spark** — Distributed preprocessing (**used for data preprocessing and feature engineering in Airflow DAGs**)
 - **⚡ FastAPI** — Modern, fast web framework for RAG Service
 - **🧠 Flask** — Lightweight web framework for ML Service
 - **🔤 Sentence Transformers** — Text embedding for RAG
@@ -247,8 +257,9 @@ docker-compose --version
 ### 5️⃣ Clone the Repository
 
 ```sh
-git clone https://github.com/<your-username>/<your-repo>.git
-cd <your-repo>
+git clone https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
+
+cd "AI-Backend-Hiring-Tasks-Prodigal-AI/Task 1 - ML + LLM Pipeline Orchestration"
 ```
 
 ---
@@ -438,115 +449,26 @@ docker system prune -a -f --volumes
 
 ---
 
-## 🛠️ Airflow Troubleshooting 🌀
+## 🌀 How to Use Airflow & Where Spark Is Used
 
-### 💥 Airflow Database Not Initialized
+After starting all services, open the **Airflow UI** at [http://localhost:8081](http://localhost:8081) and log in with:
 
-**Symptom:**  
-```
-ERROR: You need to initialize the database. Please run `airflow db init`.
-```
+- **Username:** `admin`
+- **Password:** `admin`
 
-**Solution:**
-1. Stop all containers:
-   ```sh
-   docker-compose down -v
-   ```
-2. Make sure your `docker-compose.yml` includes:
-   ```yaml
-   airflow:
-     ...
-     volumes:
-       ...
-       - airflow_db:/tmp
-   volumes:
-     mlruns:
-     airflow_db:
-   ```
-3. Re-initialize:
-   ```sh
-   docker-compose run airflow airflow db init
-   ```
-4. Start services:
-   ```sh
-   docker-compose up
-   ```
+### To Run the ML + LLM Pipeline via Airflow:
 
-### 🛑 Other Common Issues
+1. **Find the DAG** you want to run (e.g., `ml_pipeline_titanic` or `ml_pipeline_winequality`).
+2. **Click the play button (▶️)** next to the DAG name to trigger the pipeline.
+3. The DAG will automatically execute all pipeline steps in order:
+   - **Preprocessing (Spark job)** — Uses Spark for distributed data cleaning and filling missing values.
+   - **Feature Engineering (Spark job)** — Uses Spark for encoding, splitting, and saving features.
+   - **Model Training** — Runs in Python (scikit-learn/XGBoost).
+   - **Model Evaluation** — Runs in Python and logs metrics to MLflow.
+4. **Monitor progress** in Airflow's UI (Graph View, Tree View, Logs, etc.).
+5. **View experiment results** in MLflow UI at [http://localhost:5000](http://localhost:5000).
 
-- **Port Conflicts:** Change the port in `docker-compose.yml` or stop the conflicting service.
-- **Permission Errors:**  
-  ```sh
-  chmod -R 777 ./mlruns ./data ./airflow
-  ```
-- **Services Not Running:** Check logs  
-  ```sh
-  docker-compose logs <service>
-  ```
-- **DAG Not Shown:** Check DAG folder mapping and DAG file for syntax errors.
-
----
-
-## 💡 MLflow Troubleshooting 📈
-
-### 🧐 MLflow Experiments or Runs Not Showing Up
-
-- **Check Tracking URI:**  
-  Ensure your scripts use  
-  ```python
-  mlflow.set_tracking_uri("http://mlflow:5000")
-  ```
-  and not a local `file://` URI when running in Docker Compose.
-
-- **Run Scripts Inside the Container:**  
-  ```sh
-  docker compose exec ml_service python titanic_train.py
-  ```
-  Not on your host!
-
-- **Check Volumes:**  
-  Make sure `./mlruns` is mounted and permissions are correct.  
-  On Windows, run (in PowerShell):
-  ```powershell
-  icacls .\mlruns /grant "Everyone:(F)" /T
-  ```
-  On Linux/macOS:
-  ```sh
-  chmod -R 777 ./mlruns
-  ```
-
-- **Verify Artifacts:**  
-  After running a script, you should see new folders inside `mlruns/` and see new runs in the MLflow UI at [http://localhost:5000](http://localhost:5000).
-
-- **Reset MLflow State:**  
-  If you want to start from scratch:
-  ```powershell
-  Remove-Item -Recurse -Force .\mlruns
-  New-Item -ItemType Directory -Path .\mlruns
-  icacls .\mlruns /grant "Everyone:(F)" /T
-  ```
-  Or in bash:
-  ```sh
-  rm -rf ./mlruns
-  mkdir ./mlruns
-  chmod -R 777 ./mlruns
-  ```
-
-- **Check MLflow Service Logs:**  
-  ```sh
-  docker-compose logs mlflow
-  ```
-
-- **Clear Docker State:**  
-  ```sh
-  docker compose down -v
-  docker system prune -a -f --volumes
-  ```
-
-- **Still not working?**  
-  - Double-check all paths and volume mounts.
-  - Look for errors in the logs.
-  - Ensure you are not running out of disk space.
+> **Spark is used in the pipeline for the preprocessing and feature engineering steps, ensuring distributed and scalable data handling. These are triggered via Airflow BashOperator tasks running the relevant Spark/PySpark scripts.**
 
 ---
 
@@ -591,6 +513,7 @@ graph TD;
 
 ### 🤖 RAG Service
 
+> RAG Services will automatically turn off after 5 to 10 minutes because of heavy model being used from hugging face
 - FastAPI backend for retrieval-augmented generation.
 - Embeds, indexes, and serves context for LLM queries.
 - `/docs` endpoint gives OpenAPI UI for testing.
@@ -832,5 +755,3 @@ See the [LICENSE](../../LICENSE) file for details.
 
 📧 **Email**: [pavansai7654321@gmail.com](mailto:pavansai7654321@gmail.com)  
 🐙 **GitHub**: [@Pavansai20054](https://github.com/Pavansai20054)  
-
----

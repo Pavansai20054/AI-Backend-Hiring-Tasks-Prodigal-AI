@@ -8,12 +8,14 @@ def scrape_bankless(day_offset=0, articles_per_day=10):
     entries = feed.entries
     start = day_offset * articles_per_day
     end = start + articles_per_day
+    articles = []
     for entry in entries[start:end]:
-        yield {
+        articles.append({
             "title": entry.title,
             "url": entry.link,
             "source": "Bankless"
-        }
+        })
+    return articles
 
 if __name__ == "__main__":
     for offset in range(2):  # day_offset=0 and day_offset=1

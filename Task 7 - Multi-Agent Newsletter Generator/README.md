@@ -1,435 +1,763 @@
 # 🌐 Web3 Daily Newsletter Bot 🤖
 
-![Python Version](https://img.shields.io/badge/python-3.9%2B-blue)
-![License](https://img.shields.io/badge/License-Proprietary-red)
-![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)
-![Ollama](https://img.shields.io/badge/Powered%20By-Ollama%20LLM-ff69b4)
+[![Python Version](https://img.shields.io/badge/python-3.9%2B-blue)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-Proprietary-red)](LICENSE)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-brightgreen)](https://github.com/Pavansai20054/web3-newsletter-bot)
+[![Ollama](https://img.shields.io/badge/Powered%20By-Ollama%20LLM-ff69b4)](https://ollama.com/)
+[![LangChain](https://img.shields.io/badge/Framework-LangChain-orange)](https://www.langchain.com/)
+[![Web3](https://img.shields.io/badge/Focus-Web3%20%26%20Crypto-purple)](https://en.wikipedia.org/wiki/Web3)
 
-A sophisticated, production-ready automated newsletter system that **aggregates, summarizes, and delivers the latest Web3 news** from top sources directly to Telegram groups using AI-powered summarization and seamless automation.
+> A sophisticated, production-ready automated newsletter system that **aggregates, summarizes, and delivers the latest Web3 news** from top sources directly to Telegram groups using AI-powered summarization and seamless automation.
+
+---
+
+## 🎥 Demo Video
+
+Watch the demo showcasing the Web3 Daily Newsletter Bot in action:
+
+> [Click here to view the demo video on Google Drive](https://drive.google.com/file/d/1pirDiw_R_fGNzfuRJoPMGQOMHXEQ-tef/view?usp=sharing)
 
 ---
 
 ## 📑 Table of Contents
 
-- [🚀 Getting Started](#-getting-started)
-  - [✨ Features](#-features)
-  - [📦 Prerequisites](#-prerequisites)
-  - [⚙️ Installation](#️-installation)
-- [🛠 Configuration](#-configuration)
-  - [🔐 Environment Setup](#-environment-setup)
+- [🌐 Web3 Daily Newsletter Bot 🤖](#-web3-daily-newsletter-bot-)
+- [🎥 Demo Video](#demo-video)
+- [📑 Table of Contents](#-table-of-contents)
+- [📦 Prerequisites](#-prerequisites)
+  - [🖥️ System Requirements](#️-system-requirements)
+  - [🛠️ Software Dependencies](#️-software-dependencies)
+- [✨ Key Features](#-key-features)
+  - [🌐 Multi-Source Aggregation](#-multi-source-aggregation)
+  - [🧠 AI-Powered Intelligence](#-ai-powered-intelligence)
+  - [📬 Automated Delivery](#-automated-delivery)
+  - [🔧 Production Ready](#-production-ready)
+- [🏗️ System Architecture](#️-system-architecture)
+  - [🔄 Agent Workflow](#-agent-workflow)
+- [🚀 Quick Start](#-quick-start)
+  - [📝 Project Structure](#-project-structure)
+- [⚙️ Installation Guide](#️-installation-guide)
+  - [1️⃣ Clone Repository](#1️⃣-clone-repository)
+  - [2️⃣ Setup Python Environment](#2️⃣-setup-python-environment)
+  - [3️⃣ Install Dependencies](#3️⃣-install-dependencies)
+  - [4️⃣ Install Ollama](#4️⃣-install-ollama)
+  - [5️⃣ Download LLM Model](#5️⃣-download-llm-model)
+- [🛠️ Configuration](#️-configuration)
+  - [🔐 Environment Variables](#-environment-variables)
   - [🤖 Telegram Bot Setup](#-telegram-bot-setup)
-  - [👥 Telegram Group Configuration](#-telegram-group-configuration)
-  - [🦙 Ollama LLM Setup](#-ollama-llm-setup)
-- [🏗 Architecture](#-architecture)
-  - [📊 System Diagram](#-system-diagram)
-  - [⚡ Why Not Block Websites?](#-why-not-block-websites)
-- [🚦 Usage](#-usage)
-  - [🏃 Running the Bot](#-running-the-bot)
-  - [⏰ Scheduling](#-scheduling)
-  - [🔍 Manual Testing](#-manual-testing)
-- [🩺 Troubleshooting](#-troubleshooting)
-  - [⚠️ Common Issues](#️-common-issues)
-  - [🔧 Debugging Tips](#-debugging-tips)
-- [🤝 Contributing](#-contributing)
-  - [🧑‍💻 Development](#-development)
-  - [📝 Code Style](#-code-style)
-- [📜 License](#-license)
-- [📞 Contact](#-contact)
+  - [🦙 Ollama LLM Configuration](#-ollama-llm-configuration)
+- [🚦 Usage Instructions](#-usage-instructions)
+  - [🏃 Basic Usage](#-basic-usage)
+  - [🎛️ Command Line Options](#-command-line-options)
+  - [📋 Configuration Examples](#-configuration-examples)
+- [📊 System Flow](#-system-flow)
+  - [🔄 Daily Pipeline Process](#-daily-pipeline-process)
+  - [📈 Data Processing Pipeline](#-data-processing-pipeline)
+- [🎯 Example Output](#-example-output)
+  - [📰 Sample Newsletter](#-sample-newsletter)
+  - [🖥️ CLI Output Example](#-cli-output-example)
+- [⏰ Scheduling & Automation](#-scheduling--automation)
+  - [🐧 Linux (systemd)](#-linux-systemd)
+  - [🪟 Windows (Task Scheduler)](#-windows-task-scheduler)
+  - [🐳 Docker Deployment](#-docker-deployment)
+- [🔧 Troubleshooting](#-troubleshooting)
+  - [❌ Common Issues](#-common-issues)
+    - [Ollama Connection Error](#ollama-connection-error)
+    - [Telegram Bot Errors](#telegram-bot-errors)
+    - [Memory Issues](#memory-issues)
+    - [Network/Scraping Failures](#networkscraping-failures)
+- [📜 License & Copyright](#-license--copyright)
+- [📞 Contact Information](#-contact-information)
+  - [👨‍💻 Maintainer](#-maintainer)
+  - [🚀 Project Links](#-project-links)
+  - [💬 Support](#-support)
+- [⭐ Final Call to Action](#-final-call-to-action)
 
 ---
 
-## 🚀 Getting Started
+## 📦 Prerequisites
 
-This bot is intended for Web3 and crypto communities, project founders, and enthusiasts who want a **daily digest** of the latest, deduplicated, and summarized news, delivered directly to their Telegram groups with zero manual intervention.
+### 🖥️ **System Requirements**
 
----
+- **Python 3.9+** with pip package manager
+- **4GB+ RAM** (recommended for LLM processing)
+- **Internet connection** for scraping and API calls
+- **Telegram account** with bot creation permissions
+- **Membership in the [LangChainNewsAgent Telegram Group](https://t.me/+yp2bJMRHMG1jY2Nl)** _(for support & updates)_
 
-### ✨ Features
+### 🛠️ **Software Dependencies**
 
-- **🌐 Multi-Source Aggregation:** Automatically collects news from CoinDesk, CoinTelegraph, Decrypt, and Bankless, ensuring a broad and up-to-date coverage of the Web3 ecosystem.
-- **🧠 AI Summarization:** Harnesses the power of Ollama and Llama3-8b (or lighter alternatives) for concise, human-like summaries of each news item.
-- **🔍 Smart Deduplication:** Uses sentence-transformers and FAISS vector search to detect and remove duplicate or highly similar stories across multiple news sources.
-- **📬 Automated Delivery:** Sends beautifully formatted, daily newsletters to Telegram groups at scheduled times.
-- **📊 Simulation Mode:** Test the entire flow with historical data before live deployment, ensuring reliability.
-- **🎨 Rich Formatting:** Uses Markdown to present news in an attractive, readable layout (headlines, sources, summaries, links).
-- **⚡ Modular Design:** Easily add new sources, templates, or delivery channels as needed.
-- **🔒 Privacy-First:** No scraping of full content, only official RSS feeds and legal sources.
-
----
-
-### 📦 Prerequisites
-
-Before installation, ensure your environment meets the following:
-
-- **Python 3.9+**  
-  Check with: `python --version`
-- **pip 23.0+**  
-  Check with: `pip --version`
-- **Ollama** (for running Llama3 or compatible models locally)  
-  See [Ollama LLM Setup](#-ollama-llm-setup)
-- **Telegram Account** with permission to create bots and add them as group admins
-- **Hardware:**  
-  - Minimum: 2GB RAM (for basic operation and light LLMs)  
-  - Recommended: 4GB+ RAM (for larger models and faster processing)
+- **Ollama**: Local LLM runtime
+- **Git**: Version control (for cloning)
+- **Virtual environment**: Python venv or conda
 
 ---
 
-### ⚙️ Installation
+## ✨ Key Features
 
-#### 1. Clone the repository
+### 🌐 **Multi-Source Aggregation**
+
+- **CoinDesk**: Leading cryptocurrency news and analysis
+- **CoinTelegraph**: Breaking crypto news and market insights
+- **Decrypt**: Web3 culture and technology coverage
+- **Bankless**: DeFi and decentralized finance focus
+
+### 🧠 **AI-Powered Intelligence**
+
+- **LangChain Agents**: Sophisticated multi-agent architecture
+- **Ollama Integration**: Local LLM processing for privacy
+- **Smart Summarization**: Concise, readable news summaries
+- **Content Deduplication**: Eliminates duplicate stories across sources
+
+### 📬 **Automated Delivery**
+
+- **Telegram Integration**: Direct delivery to groups/channels
+- **Rich Formatting**: Markdown-formatted newsletters
+- **Scheduling Support**: Daily automated delivery
+- **Simulation Mode**: Test with historical data
+
+### 🔧 **Production Ready**
+
+- **Error Handling**: Comprehensive retry mechanisms
+- **Vector Database**: ChromaDB for article storage
+- **Modular Design**: Easy to extend and maintain
+- **Monitoring**: Colorful CLI output with status tracking
+
+---
+
+## 🏗️ System Architecture
+
+```mermaid
+graph TB
+    A[🕐 Scheduler] --> B[📰 News Scrapers]
+    B --> C{📊 Scraping Results}
+    C --> D[CoinDesk Scraper]
+    C --> E[CoinTelegraph Scraper]
+    C --> F[Decrypt Scraper]
+    C --> G[Bankless Scraper]
+
+    D --> H[🔍 Deduplication Engine]
+    E --> H
+    F --> H
+    G --> H
+
+    H --> I[🎯 Top N Selection]
+    I --> J[🤖 LangChain Agent]
+    J --> K[🦙 Ollama LLM]
+    K --> L[📝 Article Summarizer]
+
+    L --> M[📄 Newsletter Composer]
+    M --> N[📱 Telegram Bot]
+    N --> O[👥 Telegram Group]
+
+    H --> P[(🗄️ ChromaDB)]
+    P --> Q[🔍 Vector Search]
+
+    style A fill:#ff9999
+    style J fill:#99ccff
+    style K fill:#99ff99
+    style N fill:#ffcc99
+    style O fill:#cc99ff
+```
+
+### 🔄 **Agent Workflow**
+
+```mermaid
+sequenceDiagram
+    participant S as 🕐 Scheduler
+    participant A as 🤖 NewsletterAgents
+    participant D as 🔍 Deduplicator
+    participant L as 🦙 Ollama LLM
+    participant T as 📱 Telegram Bot
+    participant U as 👥 Users
+
+    S->>A: Trigger daily pipeline
+    A->>A: Scrape all sources
+    A->>D: Send raw articles
+    D->>D: Remove duplicates
+    D->>L: Forward unique articles
+    L->>L: Generate summaries
+    L->>A: Return summarized articles
+    A->>T: Send formatted newsletter
+    T->>U: Deliver to Telegram group
+
+    Note over S,U: Complete automation from scraping to delivery
+```
+
+---
+
+## 🚀 Quick Start
+
+### 📝 Project Structure
+
+```
+Task 7 - Multi-Agent Newsletter Generator/
+├── .env.local
+├── agents.py
+├── chroma_manager.py
+├── config.py
+├── cryptoplus_daily.bat
+├── deduplicate.py
+├── main.py
+├── models.py
+├── newsletter.py
+├── README.md
+├── requirements.txt
+├── scheduler.py
+├── summarizer.py
+├── telegram_bot.py
+├── todo.md
+├── chroma_db/
+├── markdown_files/
+├── scraping/
+│   ├── bankless.py
+│   ├── coindesk.py
+│   ├── cointelegraph.py
+│   ├── decrypt.py
+│   └── __init__.py
+```
+
+Get your Web3 newsletter bot running in **5 minutes**:
+
+```bash
+# Clone the repository
+git clone https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
+
+cd "AI-Backend-Hiring-Tasks-Prodigal-AI/Task 7 - Multi-Agent Newsletter Generator"
+
+# Setup virtual environment
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# venv\Scripts\activate   # Windows
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Configure environment (see Configuration section)
+cp .env.example .env.local
+# Edit .env.local with your tokens
+
+# Install and setup Ollama
+curl -fsSL https://ollama.com/install.sh | sh
+ollama pull llama3:8b
+
+# Run the bot
+python main.py
+```
+
+---
+
+## ⚙️ Installation Guide
+
+### 1️⃣ **Clone Repository**
 
 ```bash
 git clone https://github.com/Pavansai20054/web3-newsletter-bot.git
 cd web3-newsletter-bot
 ```
 
-#### 2. Create and activate a virtual environment
+### 2️⃣ **Setup Python Environment**
 
 ```bash
+# Create virtual environment
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-venv\Scripts\activate     # Windows
+
+# Activate environment
+source venv/bin/activate        # Linux/Mac
+# venv\Scripts\activate         # Windows
+
+# Upgrade pip
+pip install --upgrade pip
 ```
 
-#### 3. Install dependencies
+### 3️⃣ **Install Dependencies**
 
 ```bash
 pip install -r requirements.txt
 ```
 
-#### 4. Set up Ollama
-
-Install Ollama (if not already):
+### 4️⃣ **Install Ollama**
 
 ```bash
+# Linux/Mac
 curl -fsSL https://ollama.com/install.sh | sh
+
+# Windows: Download from https://ollama.com/download
 ```
 
-Download an appropriate model:
+### 5️⃣ **Download LLM Model**
 
 ```bash
-ollama pull llama3:8b         # For high-end PCs
-# OR for low-end systems:
-ollama pull llama3:instruct   # Smaller model
+# For high-performance systems
+ollama pull llama3:8b
+
+# For resource-constrained systems
+ollama pull llama3:instruct
 ```
+> If already pulled then serve it.
 
 ---
 
-## 🛠 Configuration
+## 🛠️ Configuration
 
-### 🔐 Environment Setup
+### 🔐 Environment Variables
 
-Create a `.env.local` file in the project root directory and fill in the following:
+Create `.env.local` file in project root:
 
 ```ini
-TELEGRAM_BOT_TOKEN=your_bot_token_here
+# Telegram Configuration
+TELEGRAM_BOT_TOKEN=your_bot_token_from_botfather
 TELEGRAM_GROUP_ID=your_group_id_here
+
+# Optional: Advanced Settings
+TOP_N_ARTICLES=10
+SIMULATION_DAYS=2
+CHROMA_PERSIST_DIR=./chroma_db
 ```
-
-- **TELEGRAM_BOT_TOKEN:**  
-  Get this from [@BotFather](https://t.me/BotFather) after creating your bot.
-- **TELEGRAM_GROUP_ID:**  
-  See [Getting Group ID](#getting-group-id).
-
----
 
 ### 🤖 Telegram Bot Setup
 
-#### 1. Create a new bot
+#### **Step 1: Create Bot**
 
-- Open the [@BotFather](https://t.me/BotFather) chat on Telegram
-- Send `/newbot` and follow the prompts to set a name and username for your bot (e.g., `Web3NewsBot`)
-- Copy the provided API token for your `.env.local`
+1. Open [@BotFather](https://t.me/BotFather) on Telegram
+2. Send `/newbot` command
+3. Follow prompts to set bot name and username
+4. Copy the API token to `.env.local`
 
-#### 2. Add the bot to your group
+#### **Step 2: Setup Group**
 
-- Open your Telegram group
-- Tap the group name > *Add Members* > search for your bot’s username > add the bot
+1. Create a new Telegram group
+2. Add your bot to the group
+3. Make bot an admin with "Post Messages" permission
+4. Get group ID using [@RawDataBot](https://t.me/RawDataBot)
 
-#### 3. Make the bot an admin
+### 🦙 Ollama LLM Configuration
 
-- Go to group settings > *Administrators*
-- Find your bot in the list and toggle all admin privileges, especially **"Post Messages"**
-
----
-
-### 👥 Telegram Group Configuration
-
-#### Getting Group ID
-
-1. Add [@RawDataBot](https://t.me/RawDataBot) to your group.
-2. Send any message within the group.
-3. The bot will reply with raw JSON data.  
-   Look for: `"chat":{"id":-123456789}`  
-   The **negative number** is your group ID.
-
-**Important Notes:**
-- For supergroups, the ID starts with `-100`
-- The bot must be admin to send messages
-- Enable **"Allow anonymous admins"** in group settings if needed
-
----
-
-### 🦙 Ollama LLM Setup
-
-Choose a model based on your hardware:
-
-#### For High-End PCs (16GB+ RAM):
+#### **Model Selection Guide**
 
 ```bash
-ollama pull llama3:70b        # Most powerful model
-ollama pull mixtral:latest    # Alternative
+# High-end systems (16GB+ RAM)
+ollama pull llama3:70b          # Best quality
+ollama pull mixtral:latest      # Alternative
+
+# Mid-range systems (8GB RAM)
+ollama pull llama3:8b           # Balanced
+
+# Low-end systems (4GB RAM)
+ollama pull llama3:instruct     # Optimized
+ollama pull gemma:2b            # Lightweight
 ```
 
-#### For Low-End PCs (4GB RAM):
+#### **Performance Optimization**
 
 ```bash
-ollama pull llama3:instruct   # Optimized version
-ollama pull gemma:2b          # Very lightweight
-```
-
-#### Performance Tuning
-
-Set environment variables before running for optimal performance:
-
-```bash
+# Set environment variables
 export OLLAMA_NUM_GPU=1           # Use GPU if available
-export OLLAMA_MAX_KEEP_ALIVE=30m  # Keep model loaded for 30 minutes
+export OLLAMA_MAX_KEEP_ALIVE=30m  # Keep model loaded
+export OLLAMA_MAX_MEMORY=4096     # Memory limit in MB
 ```
 
 ---
 
-## 🏗 Architecture
+## 🚦 Usage Instructions
 
-### 📊 System Diagram
-
-**How the bot delivers your daily news:**
-
-```
-sequenceDiagram
-    participant S as Scheduler
-    participant C as Scrapers
-    participant D as Deduplicator
-    participant L as LLM
-    participant T as Telegram
-    
-    S->>C: Trigger daily scrape
-    C->>D: Send raw articles
-    D->>L: Forward unique articles
-    L->>T: Send summarized news
-    T->>Users: Deliver newsletter
-```
-
----
-
-### ⚡ Why Not Block Websites?
-
-We intentionally avoid scraping full websites for the following reasons:
-
-- **Respect for Publishers:**  
-  We use only official RSS feeds, which provide legal access to headlines.
-- **Sustainability:**  
-  Prevents IP bans from aggressive scraping practices.
-- **Focus on Value:**  
-  Summarization adds more value than copying full articles.
-- **Compliance:**  
-  Adheres to most websites’ terms of service.
-- **Performance:**  
-  RSS is lightweight, fast, and reduces server load.
-
----
-
-## 🚦 Usage
-
-### 🏃 Running the Bot
-
-#### Normal Mode (Live):
+### 🏃 **Basic Usage**
 
 ```bash
+# Run with default settings
 python main.py
+
+# Run simulation mode (no Telegram sending)
+python main.py --simulation-days 2
+
+# Custom configuration
+python main.py --top-n 15 --publications coindesk cointelegraph
 ```
 
-#### Simulation Mode (Test):
+### 🎛️ **Command Line Options**
+
+| Option              | Description            | Default                                    |
+| ------------------- | ---------------------- | ------------------------------------------ |
+| `--publications`    | News sources to scrape | coindesk, cointelegraph, decrypt, bankless |
+| `--top-n`           | Number of top articles | 10                                         |
+| `--simulation-days` | Days to simulate       | 2                                          |
+
+### 📋 **Configuration Examples**
 
 ```bash
-# Tests 2 days of newsletters without sending
-python main.py --simulate --days 2
-```
+# Focus on specific sources
+python main.py --publications coindesk decrypt --top-n 5
 
-#### Dry Run (Debug):
+# Extended simulation
+python main.py --simulation-days 7 --top-n 8
 
-```bash
-# Fetches but doesn't send to Telegram
-python main.py --dry-run
+# Quick test run
+python main.py --simulation-days 1 --top-n 3
 ```
 
 ---
 
-### ⏰ Scheduling
+## 📊 System Flow
 
-#### Linux (systemd):
+### 🔄 **Daily Pipeline Process**
 
-To run the bot automatically each day, create a systemd service:
+```mermaid
+flowchart TD
+    A[🕐 Daily Trigger] --> B[📰 Scrape Sources]
+    B --> C{🔍 Articles Found?}
+    C -->|Yes| D[📊 Deduplicate]
+    C -->|No| E[⚠️ Log Warning]
+    E --> F[🔄 Retry Later]
+
+    D --> G[🎯 Select Top N]
+    G --> H[🤖 LangChain Agent]
+    H --> I[🦙 Ollama Processing]
+    I --> J[📝 Generate Summaries]
+    J --> K[📄 Compose Newsletter]
+    K --> L[📱 Send to Telegram]
+    L --> M[✅ Success]
+
+    style A fill:#e1f5fe
+    style H fill:#f3e5f5
+    style I fill:#e8f5e8
+    style L fill:#fff3e0
+    style M fill:#e4f5e4
+```
+
+### 📈 **Data Processing Pipeline**
+
+1. **Scraping Phase**: Parallel fetching from all sources
+2. **Deduplication**: Vector similarity using sentence-transformers
+3. **Selection**: Ranking and top-N article selection
+4. **Summarization**: LangChain + Ollama processing
+5. **Composition**: Newsletter formatting with Markdown
+6. **Delivery**: Telegram Bot API integration
+
+---
+
+## 🎯 Example Output
+
+### 📰 **Sample Newsletter**
+
+```markdown
+📰 _Web3 Daily Newsletter_
+_Date: 2025-01-08_
+Top Stories from CoinDesk, CoinTelegraph, Decrypt, Bankless
+
+_1. Bitcoin Surges Past $45K Amid Institutional Adoption_ [CoinDesk]
+Bitcoin reaches new monthly high as major corporations continue adding crypto to their treasury reserves. The surge comes amid growing institutional interest and regulatory clarity in key markets.
+[Read more](https://coindesk.com/bitcoin-surges-45k)
+
+_2. Ethereum Layer 2 Solutions See Record Usage_ [CoinTelegraph]
+Arbitrum and Optimism process over 1 million transactions daily as users migrate to cheaper alternatives. The shift indicates growing maturity of scaling solutions for the Ethereum ecosystem.
+[Read more](https://cointelegraph.com/l2-record-usage)
+
+_3. DeFi Protocol Launches Cross-Chain Bridge_ [Decrypt]
+New interoperability solution connects Ethereum, Polygon, and Avalanche networks. The bridge aims to solve liquidity fragmentation across different blockchain ecosystems.
+[Read more](https://decrypt.co/defi-cross-chain-bridge)
+
+_Curated automatically by LangNewsAgent._
+Feedback? Reply to this group or email feedback@example.com
+To unsubscribe, remove yourself from this Telegram group.
+```
+
+### 🖥️ **CLI Output Example**
 
 ```bash
-sudo tee /etc/systemd/system/web3news.service > /dev/null <<EOL
+╒═══════════════════════════════════╕
+│ WEB3 NEWSLETTER GENERATOR         │
+╘═══════════════════════════════════╛
+
+ℹ Initializing components...
+ℹ Sources: coindesk, cointelegraph, decrypt, bankless
+ℹ Top articles per day: 10
+
+⚙ LLM Agent: Initializing Ollama...
+✓ LLM Agent: Ready to generate summaries
+⚙ Scraper Agent: Fetching articles...
+✓ Scraper Agent: Found 47 articles
+⚙ VectorDB Agent: Storing articles...
+✓ VectorDB Agent: Articles stored
+⚙ Summarizer Agent: Generating summaries...
+✓ Summarizer Agent: Generated 10 summaries
+⚙ Composer Agent: Formatting newsletter...
+✓ Composer Agent: Newsletter composed
+⚙ Telegram Agent: Sending newsletter...
+✓ Telegram Agent: Newsletter sent
+
+✓ All tasks completed successfully!
+```
+
+---
+
+## ⏰ Scheduling & Automation
+
+### 🐧 **Linux (systemd)**
+
+Create service file:
+
+```bash
+sudo tee /etc/systemd/system/web3news.service > /dev/null <<EOF
 [Unit]
 Description=Web3 Newsletter Bot
 After=network.target
 
 [Service]
+Type=simple
 User=ubuntu
-WorkingDirectory=/path/to/project
-ExecStart=/path/to/venv/bin/python /path/to/project/main.py
+WorkingDirectory=/path/to/web3-newsletter-bot
+ExecStart=/path/to/venv/bin/python main.py
 Restart=always
+RestartSec=300
 
 [Install]
 WantedBy=multi-user.target
-EOL
+EOF
 
+# Enable and start service
 sudo systemctl enable web3news
 sudo systemctl start web3news
 ```
 
-#### Windows (Task Scheduler):
+# 🏃‍♂️ Universal Batch File for Python venv & Conda Environments
 
-- Open Task Scheduler
-- Create Basic Task
-- Set trigger to "Daily"
-- Action: "Start a program"
-- Program: `pythonw.exe`
-- Arguments: `main.py`
+This batch file will automatically detect and use either a Python **venv** or a **conda** environment to run your script.  
+**You only need one `.bat` file for both!**
 
 ---
 
-### 🔍 Manual Testing
+## 📄 Batch File Content
 
-Test individual components before going live:
+```batch
+@echo off
+REM === Automated Python Script Runner: venv or conda ===
 
-```bash
-# Test CoinDesk scraper
-python -m scraping.coindesk
+REM ======== CONFIGURATION (EDIT THESE PATHS) ========
 
-# Test summarization
-python -m summarizer --text "Your test news headline here"
+REM -- Path to venv (virtual environment) folder (if using venv)
+set VENV_PATH=R:\Conda VE-Internships\prodigal_env\venv
 
-# Test Telegram sending
-python -m telegram_bot --test "Hello World"
+REM -- Path to conda activate.bat (if using conda)
+set CONDA_ACTIVATE=R:\Conda VE-Internships\prodigal_env\Scripts\activate.bat
+
+REM -- Name of your conda environment
+set CONDA_ENV_NAME=prodigal_env
+
+REM -- Path to your Python script (edit this for your use case)
+set SCRIPT_PATH=R:\Conda VE-Internships\prodigal_env\my_script.py
+
+REM ======== DO NOT EDIT BELOW THIS LINE UNLESS NEEDED ========
+
+REM -- Try venv first
+if exist "%VENV_PATH%\Scripts\python.exe" (
+    echo [INFO] Running with Python venv...
+    "%VENV_PATH%\Scripts\python.exe" "%SCRIPT_PATH%"
+    goto end
+)
+
+REM -- Try conda
+if exist "%CONDA_ACTIVATE%" (
+    echo [INFO] Running with conda environment...
+    CALL "%CONDA_ACTIVATE%" %CONDA_ENV_NAME%
+    python "%SCRIPT_PATH%"
+    goto end
+)
+
+REM -- Neither found
+echo [ERROR] No valid venv or conda environment detected! Check your paths.
+
+:end
+pause
 ```
 
 ---
 
-## 🩺 Troubleshooting
+## 📝 What to Change
 
-### ⚠️ Common Issues
+| Variable         | Description                               | Example Value                                   |
+| ---------------- | ----------------------------------------- | ----------------------------------------------- |
+| `VENV_PATH`      | Path to user's virtual environment folder | `C:\Users\Alice\project\venv`                   |
+| `CONDA_ACTIVATE` | Path to user's `activate.bat` for conda   | `C:\Users\Alice\anaconda3\Scripts\activate.bat` |
+| `CONDA_ENV_NAME` | User's conda environment name             | `myenv`                                         |
+| `SCRIPT_PATH`    | Path to Python script to run              | `C:\Users\Alice\project\main.py`                |
 
-#### 1. Ollama Not Responding
+**How to update:**
+
+1. Open the `.bat` file in a text editor.
+2. Change the four variables at the top to fit your own paths and environment names.
+3. Save and run the file (double-click or use Task Scheduler).
+
+---
+
+## ✅ Key Points
+
+- Only one `.bat` file is needed for both venv and conda.
+- The script tries venv first, then conda, then gives an error if neither found.
+- **Always use absolute paths.**
+- If the environment or script path changes, just update the variables at the top.
+
+---
+
+# 🪟 How to Add Your Batch File to Windows Task Scheduler
+
+## 1. Open Task Scheduler
+
+- Press `Win + S`, type **Task Scheduler**, and open it.
+
+---
+
+## 2. Create a Basic Task
+
+- Click **Create Basic Task...**
+- Give it a **Name** (e.g., `CryptoPulse Daily Newsletter`).
+- Set your **Trigger** Daily for 2 days.
+
+---
+
+## 3. Set the Action
+
+- **Action:** Start a program
+
+**Program/script:**
+
+```
+R:\Conda VE-Internships\prodigal_env\cryptopulse_daily.bat
+```
+
+**Start in (optional):**
+
+```
+R:\Conda VE-Internships\prodigal_env
+```
+
+> ⚠️ **If you move your batch file or project to another location or system, just modify the above lines to match the new path!**
+
+---
+
+## 4. Finish Setup
+
+- Click **Finish**.
+- You can right-click the task and select **Run** to test it.
+
+---
+
+**Your scheduled task will now run your batch file automatically according to your chosen schedule!**
+
+### 🐳 **Docker Deployment**
+
+```dockerfile
+FROM python:3.9-slim
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+COPY . .
+
+CMD ["python", "main.py"]
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### ❌ **Common Issues**
+
+#### **Ollama Connection Error**
 
 ```bash
-# Check service status
+# Check Ollama service
 ollama serve
 
-# Reset the service
-sudo systemctl restart ollama
+# Verify model is available
+ollama list
+
+# Test model
+ollama run llama3:8b "Hello world"
 ```
 
-#### 2. Telegram API Errors
+#### **Telegram Bot Errors**
 
-- Ensure bot token is correct
-- Verify group ID is properly set
-- Check bot has admin privileges
+- ✅ Verify bot token is correct
+- ✅ Check group ID format (negative number)
+- ✅ Ensure bot has admin permissions
+- ✅ Confirm bot can send messages
 
-#### 3. Scraping Failures
+#### **Memory Issues**
+
+```bash
+# Monitor memory usage
+htop
+
+# Use lighter model
+ollama pull gemma:2b
+
+# Limit memory in .env.local
+OLLAMA_MAX_MEMORY=2048
+```
+
+#### **Network/Scraping Failures**
 
 ```bash
 # Test connectivity
 curl -v https://cointelegraph.com/rss
 
-# Check if being blocked
-python -m scraping.cointelegraph --debug
-```
+# Check firewall settings
+sudo ufw status
 
-#### 4. Low Memory Errors
-
-```ini
-# In .env.local add:
-OLLAMA_MAX_MEMORY=2048  # MB
+# Verify DNS resolution
+nslookup cointelegraph.com
 ```
 
 ---
 
-### 🔧 Debugging Tips
-
-- **Enable verbose logging:**
-    ```bash
-    python main.py --verbose
-    ```
-- **Check network connections:**
-    ```bash
-    lsof -i :11434  # Ollama port
-    ```
-- **Monitor resource usage:**
-    ```bash
-    htop      # Linux
-    taskmgr   # Windows
-    ```
-
----
-
-## 🤝 Contributing
-
-### 🧑‍💻 Development
-
-**Code Structure:**
-
-```
-├── scraping/          # Website scrapers
-├── config.py          # Configuration
-├── deduplicate.py     # Article deduplication
-├── models.py          # Data models
-├── newsletter.py      # Newsletter templates
-├── summarizer.py      # AI summarization
-├── telegram_bot.py    # Telegram integration
-└── main.py            # Main application
-```
-
-**Adding New Sources:**
-
-1. Create a new scraper in the `scraping/` folder
-2. Add your function to `SCRAPER_FUNCS` in `scraping/__init__.py`
-3. Update the `PUBLICATIONS` dictionary in `config.py` with a label and URL
-
----
-
-### 📝 Code Style
-
-- Follow [PEP 8](https://peps.python.org/pep-0008/) guidelines
-- Use type hints for all function signatures
-- Write docstrings for all public methods
-- 120 character line limit
-- 4-space indentation (no tabs)
-
----
-
-## 📜 License
-
-See full license at: [LICENSE](./LICENSE)
+## 📜 License & Copyright
 
 ```
 Copyright (c) 2025 RANGDAL PAVANSAI
 All Rights Reserved.
+
+This software is proprietary and confidential. No part of this software
+may be reproduced, distributed, or transmitted in any form or by any means,
+including photocopying, recording, or other electronic or mechanical methods,
+without the prior written permission of the copyright owner.
+
+Unauthorized copying, modification, distribution, or use of this software
+is strictly prohibited and may result in severe civil and criminal penalties.
 ```
 
----
-
-## 📞 Contact
-
-**Maintainer:**  
-PAVANSAI RANGDAL  
-📧 Email: [pavansai87654321@gmail.com](mailto:pavansai87654321@gmail.com)  
-🐙 GitHub: [https://github.com/Pavansai20054](https://github.com/Pavansai20054)
+**⚠️ NOTICE**: This project is under proprietary license. Commercial use, redistribution, or modification without explicit permission is prohibited.
 
 ---
 
-> **Feedback, suggestions, and contributions are welcome!**  
-> Please open an issue or pull request to propose improvements or report bugs.
+## 📞 Contact Information
+
+### 👨‍💻 **Maintainer**
+
+**PAVANSAI RANGDAL**  
+🎓 Full Stack Developer & AI Engineer  
+📧 **Email**: [pavansai87654321@gmail.com](mailto:pavansai87654321@gmail.com)  
+🐙 **GitHub**: [https://github.com/Pavansai20054](https://github.com/Pavansai20054)  
+🌐 **LinkedIn**: [Connect with me](https://linkedin.com/in/pavansai-rangdal)
+
+### 🚀 **Project Links**
+
+- **Repository**: [Web3 Newsletter Bot](https://github.com/Pavansai20054/web3-newsletter-bot)
+- **Issues**: [Report bugs or request features](https://github.com/Pavansai20054/web3-newsletter-bot/issues)
+- **Discussions**: [Join the conversation](https://github.com/Pavansai20054/web3-newsletter-bot/discussions)
+
+### 💬 **Support**
+
+For technical support, feature requests, or business inquiries:
+
+- 📧 Email: pavansai87654321@gmail.com
+- 🐛 Bug reports: Use GitHub Issues
+- 💡 Feature requests: Use GitHub Discussions
+
+---
+
+## ⭐ Final Call to Action
+
+> **🎯 Ready to automate your Web3 news?** Follow the Quick Start guide above and have your newsletter bot running in minutes!
+
+**⭐ If this project helps you, consider giving it a star on GitHub!**

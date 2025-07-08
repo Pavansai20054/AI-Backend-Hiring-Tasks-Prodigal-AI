@@ -15,59 +15,53 @@ def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def print_header():
+    """Print colorful header"""
     clear_console()
-    print(Fore.CYAN + r"""[Microsoft Research Blog Scraper Header]""")
+    print(Fore.CYAN + r"""
+[38;5;196m╔╦╗[38;5;226m╦[38;5;39m╔═╗[38;5;196m╦═╗[38;5;40m╔═╗[38;5;226m╔═╗[38;5;196m╔═╗[38;5;40m╔═╗[38;5;226m╔╦╗  [38;5;196m╦═╗[38;5;40m╔═╗[38;5;226m╔═╗[38;5;39m╔═╗[38;5;196m╔═╗[38;5;40m╦═╗[38;5;226m╔═╗[38;5;39m╦ ╦  [38;5;196m╔╗ ╦  [38;5;40m╔═╗[38;5;226m╔═╗  [38;5;196m╔═╗[38;5;40m╔═╗[38;5;226m╦═╗[38;5;39m╔═╗[38;5;196m╔═╗[38;5;40m╔═╗[38;5;226m╦═╗
+[38;5;196m║║║[38;5;226m║║  [38;5;39m╠╦╝[38;5;196m║ ║[38;5;40m╚═╗[38;5;226m║ ║[38;5;196m╠╣  [38;5;40m║   [38;5;226m╠╦╝[38;5;39m║╣ [38;5;196m╚═╗[38;5;40m║╣ [38;5;226m╠═╣[38;5;39m╠╦╝[38;5;196m║  [38;5;40m╠═╣  [38;5;226m╠╩╗[38;5;39m║  [38;5;196m║ ║[38;5;40m║ ╦  [38;5;226m╚═╗[38;5;39m║  [38;5;196m╠╦╝[38;5;40m╠═╣[38;5;226m╠═╝[38;5;39m║╣ [38;5;196m╠╦╝
+[38;5;196m╩ ╩[38;5;226m╩╚═╝[38;5;39m╩╚═[38;5;196m╚═╝[38;5;40m╚═╝[38;5;226m╚═╝[38;5;196m╚   [38;5;40m╩   [38;5;226m╩╚═[38;5;39m╚═╝[38;5;196m╚═╝[38;5;40m╚═╝[38;5;226m╩ ╩[38;5;39m╩╚═[38;5;196m╚═╝[38;5;40m╩ ╩  [38;5;226m╚═╝[38;5;39m╩═╝[38;5;196m╚═╝[38;5;40m╚═╝  [38;5;226m╚═╝[38;5;39m╚═╝[38;5;196m╩╚═[38;5;40m╩ ╩[38;5;226m╩  [38;5;39m╚═╝[38;5;196m╩╚═
+    """)
     print(Fore.YELLOW + " Microsoft Research Blog Scraper " + Style.RESET_ALL)
     print(Fore.GREEN + "="*60 + Style.RESET_ALL)
-    print(Fore.MAGENTA + " • Scrapes full article content including text and metadata")
-    print(Fore.MAGENTA + " • Visits each article page individually for complete data")
+    print(Fore.MAGENTA + " • Scrapes articles with title, link, and description")
     print(Fore.MAGENTA + " • Saves results in CSV and JSON formats")
+    print(Fore.MAGENTA + " • Interactive progress tracking")
     print(Fore.GREEN + "="*60 + Style.RESET_ALL)
 
-def create_output_directories():
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    outputs_dir = os.path.join(script_dir, "..", "outputs", "microsoft-articles")
-    csv_dir = os.path.join(outputs_dir, "csv-files")
-    json_dir = os.path.join(outputs_dir, "json-files")
-    os.makedirs(csv_dir, exist_ok=True)
+def create_output_directory():
+    # Set this to your real, existing folder
+    json_dir = r"A:\Internships\AI-Backend-Hiring-Tasks-Prodigal-AI\Task 6 - Article + Scheme Scraper & Summary Report\outputs\microsoft-articles\json-files"
     os.makedirs(json_dir, exist_ok=True)
-    csv_display_path = os.path.join("outputs", "microsoft-articles", "csv-files")
-    json_display_path = os.path.join("outputs", "microsoft-articles", "json-files")
-    print(Fore.CYAN + "✔ Output directories created/verified:" + Style.RESET_ALL)
-    print(Fore.WHITE + "   • CSV: " + Fore.GREEN + f"{csv_display_path}" + Style.RESET_ALL)
-    print(Fore.WHITE + "   • JSON: " + Fore.GREEN + f"{json_display_path}" + Style.RESET_ALL)
-    return csv_dir, json_dir
+    print(Fore.CYAN + "✔ Output directory created/verified:" + Style.RESET_ALL)
+    print(Fore.WHITE + "   • JSON: " + Fore.GREEN + f"{json_dir}" + Style.RESET_ALL)
+    return json_dir
 
 async def show_progress(current, total):
     bar_length = 30
     progress = float(current)/float(total)
     block = int(round(bar_length * progress))
     percent = round(progress * 100, 2)
-    progress_bar = (Fore.GREEN + "█" * block + 
-                   Fore.YELLOW + "░" * (bar_length - block) + 
+    progress_bar = (Fore.GREEN + "█" * block +
+                   Fore.YELLOW + "░" * (bar_length - block) +
                    Style.RESET_ALL)
     sys.stdout.write(f"\r[{progress_bar}] {percent}% ({current}/{total} articles)")
     sys.stdout.flush()
 
 def clean_url(url):
-    """Standardize and clean URLs to ensure they're always in a valid format."""
     if not url or url == "No link":
         return url
     url = url.replace('\\/', '/')
     url = url.strip()
-    # If it's a relative MS blog link, prepend the full base
     if url.startswith('/en-us/research/blog/'):
         return f"https://www.microsoft.com{url}"
-    # If it starts with just /research/blog/, also prepend
     if url.startswith('/research/blog/'):
         return f"https://www.microsoft.com/en-us{url}"
-    # If it's a partial path with no leading slash, prepend full
     if not url.startswith('http'):
         if url.startswith('research/blog/'):
             return f"https://www.microsoft.com/en-us/{url}"
         elif not url.startswith('/'):
             return f"https://www.microsoft.com/en-us/research/blog/{url}"
-    # If it's already absolute, return as is
     return url
 
 def clean_text(text):
@@ -90,11 +84,12 @@ async def scrape_article_page(context, article_url):
     article_data = {
         "title": "",
         "link": article_url,
-        "author": "",
+        "authors": "",
         "date": "",
         "categories": [],
         "content": "",
-        "full_text": ""
+        "full_text": "",
+        "social_links": {}
     }
     try:
         page = await context.new_page()
@@ -107,20 +102,24 @@ async def scrape_article_page(context, article_url):
         if title:
             article_data["title"] = clean_text(await title.inner_text())
 
-        # Author
-        authors = []
-        author_section = await page.query_selector('div:has-text("By ")')
-        if author_section:
-            author_text = await author_section.inner_text()
-            authors_found = re.findall(r'By\s+([^,]+)', author_text)
-            if authors_found:
-                authors.extend(authors_found)
-        byline_links = await page.query_selector_all('a[href*="/en-us/research/people/"]')
-        for byline in byline_links:
-            atext = clean_text(await byline.inner_text())
-            if atext and atext not in authors:
-                authors.append(atext)
-        article_data["author"] = ", ".join(authors).strip()
+        # Authors and designations
+        author_entries = []
+        author_list = await page.query_selector_all('p.single-post__header-authors span.msr-authors-list--author')
+        for author in author_list:
+            a_node = await author.query_selector('a')
+            name = ""
+            designation = ""
+            if a_node:
+                name = (await a_node.get_attribute('data-bi-cn')) or await a_node.inner_text()
+            title_node = await author.query_selector('span.msr-authors-list--title')
+            if title_node:
+                designation = await title_node.inner_text()
+                designation = clean_text(designation)
+            author_entry = name.strip()
+            if designation:
+                author_entry += f" ({designation})"
+            author_entries.append(author_entry)
+        article_data["authors"] = "; ".join(author_entries)
 
         # Date
         date_node = await page.query_selector('time')
@@ -151,7 +150,6 @@ async def scrape_article_page(context, article_url):
         if not main_section:
             main_section = await page.query_selector('div[role="main"]')
         if main_section:
-            # Try to extract all visible text blocks, links, and section headers
             nodes = await main_section.query_selector_all('h1,h2,h3,h4,h5,p,li,blockquote,a')
             for node in nodes:
                 t = await node.inner_text()
@@ -160,10 +158,37 @@ async def scrape_article_page(context, article_url):
                     content_blocks.append(t)
         article_data["content"] = "\n".join(content_blocks)
 
-        # Full text
+        # Social links
+        social_links = {}
+        social_section = await page.query_selector('div.single-post__social.d-flex.align-items-center ul')
+        if social_section:
+            items = await social_section.query_selector_all('li')
+            for item in items:
+                a_tag = await item.query_selector('a')
+                if a_tag:
+                    url = await a_tag.get_attribute('href')
+                    label = await a_tag.get_attribute('title') or await a_tag.get_attribute('aria-label') or await a_tag.get_attribute('data-bi-cn')
+                    if not label:
+                        # Guess platform from url
+                        if "facebook.com" in url:
+                            label = "Facebook"
+                        elif "linkedin.com" in url:
+                            label = "LinkedIn"
+                        elif "twitter.com" in url or "x.com" in url:
+                            label = "X"
+                        elif "reddit.com" in url:
+                            label = "Reddit"
+                        elif "rss" in url:
+                            label = "RSS"
+                        else:
+                            label = url
+                    social_links[label] = url
+        article_data["social_links"] = social_links
+
+        # Full text for preview
         article_data["full_text"] = "\n".join(filter(None, [
             article_data["title"],
-            f"Author: {article_data['author']}",
+            f"Authors: {article_data['authors']}",
             f"Date: {article_data['date']}",
             f"Categories: {', '.join(article_data['categories'])}",
             article_data["content"]
@@ -176,7 +201,7 @@ async def scrape_article_page(context, article_url):
 
 async def scrape_msresearch():
     print_header()
-    csv_dir, json_dir = create_output_directories()
+    json_dir = create_output_directory()
     while True:
         try:
             num_articles = int(input(Fore.BLUE + "\n🔢 How many articles would you like to scrape? (Enter positive Integer): " + Style.RESET_ALL))
@@ -192,7 +217,7 @@ async def scrape_msresearch():
     data = []
 
     async with async_playwright() as p:
-        print(Fore.BLUE + "\n🖥️  Launching browser... (this may take a moment)" + Style.RESET_ALL)
+        print(Fore.BLUE + "\n🖥  Launching browser... (this may take a moment)" + Style.RESET_ALL)
         browser = await p.chromium.launch(headless=False, slow_mo=100)
         context = await browser.new_context()
         page = await context.new_page()
@@ -221,7 +246,6 @@ async def scrape_msresearch():
                     try:
                         await article.scroll_into_view_if_needed()
                         await asyncio.sleep(0.2)
-                        # Get article link
                         link_elem = await article.query_selector('a[href*="/research/blog/"]')
                         link = None
                         if link_elem:
@@ -230,7 +254,6 @@ async def scrape_msresearch():
                                 link = clean_url(href)
                         if not link:
                             continue
-                        # Scrape in new tab for stability and to allow scrolling
                         print(Fore.BLUE + f"\n📖 Opening article: {link}" + Style.RESET_ALL)
                         article_data = await scrape_article_page(context, link)
                         if article_data["title"] and (article_data["content"] or article_data["full_text"]):
@@ -245,7 +268,6 @@ async def scrape_msresearch():
                 if len(data) >= num_articles:
                     break
 
-                # Try to go to next page
                 next_button = await page.query_selector('a[aria-label*="Next"], a:has-text("Next"), .next a, .page-numbers.next')
                 if next_button:
                     print(Fore.BLUE + f"\n⏩ Navigating to next page..." + Style.RESET_ALL)
@@ -254,7 +276,7 @@ async def scrape_msresearch():
                     page_num += 1
                     consecutive_failed_pages = 0
                 else:
-                    print(Fore.YELLOW + "\nℹ️  No more pages available (no next button found)" + Style.RESET_ALL)
+                    print(Fore.YELLOW + "\nℹ  No more pages available (no next button found)" + Style.RESET_ALL)
                     break
             except Exception as e:
                 print(Fore.RED + f"\n⚠ Error loading page {page_num}: {str(e)}" + Style.RESET_ALL)
@@ -270,7 +292,7 @@ async def scrape_msresearch():
         print(Fore.CYAN + f"📊 Articles collected: {Fore.GREEN}{len(data)}" + Style.RESET_ALL)
         print(Fore.CYAN + f"📖 Pages processed: {Fore.GREEN}{page_num}" + Style.RESET_ALL)
         duration = (datetime.now() - start_time).total_seconds()
-        print(Fore.CYAN + f"⏱️  Time taken: {Fore.GREEN}{duration:.2f} seconds" + Style.RESET_ALL)
+        print(Fore.CYAN + f"⏱  Time taken: {Fore.GREEN}{duration:.2f} seconds" + Style.RESET_ALL)
         print(Fore.YELLOW + "="*60 + Style.RESET_ALL)
 
         if data:
@@ -279,27 +301,22 @@ async def scrape_msresearch():
             for item in final_data:
                 if 'link' in item:
                     item['link'] = clean_url(item['link'])
-            df = pd.DataFrame(final_data)
             date_str = datetime.now().strftime("%Y-%m-%d")
             time_str = datetime.now().strftime("%H%M")
             article_count = len(final_data)
             base_name = f"microsoft_research_articles_{article_count}items_{date_str}_{time_str}"
-            csv_file = os.path.join(csv_dir, f"{base_name}.csv")
             json_file = os.path.join(json_dir, f"{base_name}.json")
-            df.to_csv(csv_file, index=False)
             with open(json_file, 'w', encoding='utf-8') as f:
                 json.dump(final_data, f, indent=2, ensure_ascii=False, separators=(',', ': '))
-            csv_display_path = os.path.join("outputs", "microsoft-articles", "csv-files", f"{base_name}.csv")
-            json_display_path = os.path.join("outputs", "microsoft-articles", "json-files", f"{base_name}.json")
-            print(Fore.GREEN + f"\n✔ Files saved to organized directories:" + Style.RESET_ALL)
-            print(Fore.WHITE + "   • CSV: " + Fore.CYAN + f"{csv_display_path}" + Style.RESET_ALL)
-            print(Fore.WHITE + "   • JSON: " + Fore.MAGENTA + f"{json_display_path}" + Style.RESET_ALL)
+            print(Fore.GREEN + f"\n✔ File saved to organized directory:" + Style.RESET_ALL)
+            print(Fore.WHITE + "   • JSON: " + Fore.MAGENTA + f"{json_file}" + Style.RESET_ALL)
             print(Fore.CYAN + "\n📋 Sample of collected articles:" + Style.RESET_ALL)
             for i, article in enumerate(final_data[:3]):
                 print(Fore.WHITE + f"   {i+1}. " + Fore.GREEN + f"{article['title']}" + Style.RESET_ALL)
-                print(Fore.WHITE + "      Author: " + Fore.CYAN + f"{article.get('author', 'N/A')}" + Style.RESET_ALL)
+                print(Fore.WHITE + "      Authors: " + Fore.CYAN + f"{article.get('authors', 'N/A')}" + Style.RESET_ALL)
                 print(Fore.WHITE + "      Date: " + Fore.YELLOW + f"{article.get('date', 'N/A')}" + Style.RESET_ALL)
                 print(Fore.WHITE + "      Categories: " + Fore.MAGENTA + f"{', '.join(article.get('categories', []))}" + Style.RESET_ALL)
+                print(Fore.WHITE + "      Social links: " + Fore.BLUE + f"{article.get('social_links', {})}" + Style.RESET_ALL)
                 print(Fore.WHITE + "      Content preview: " + Fore.WHITE + f"{article.get('content', 'N/A')[:100]}..." + Style.RESET_ALL)
             print(Fore.GREEN + f"\n✅ Successfully scraped {len(final_data)} articles with full content!" + Style.RESET_ALL)
         else:

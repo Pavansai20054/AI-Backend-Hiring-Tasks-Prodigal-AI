@@ -14,6 +14,12 @@
 
 ---
 
+## 📽️ Demo Video
+
+> [▶️ Watch Demo on Google Drive](https://drive.google.com/file/d/1ixwrW1pxjJ8gTwwPzmZTpNX7d0R9Gu5Z/view?usp=sharing)
+
+---
+
 ## 📚 Table of Contents
 
 1. [Project Overview](#project-overview)
@@ -173,8 +179,9 @@ python3 --version
 ### 1️⃣ Clone the Repository
 
 ```sh
-git clone <your-repo-url>
-cd <repo-directory>
+git clone https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
+
+cd "AI-Backend-Hiring-Tasks-Prodigal-AI/Task 3 - Kafka + Zookeeper for High-Throughput API"
 ```
 
 ---

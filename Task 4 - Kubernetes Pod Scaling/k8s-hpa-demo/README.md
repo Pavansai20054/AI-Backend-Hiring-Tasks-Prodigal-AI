@@ -10,6 +10,13 @@
 
 ---
 
+## ▶️ Demo Video
+
+Watch the demonstration of the Kubernetes Pod Scaling with FastAPI & HPA here:  
+**[🟢 Demo Video (Google Drive Link)](https://drive.google.com/file/d/1-F7p66JkSU27NG7UaQevjPJZ-pVTQ9Az/view?usp=sharing)**
+
+---
+
 ## 📋 Table of Contents
 
 - [🌟 Features](#-features)
@@ -526,8 +533,9 @@ You can now generate load as before (see "Load Testing & Monitoring" section) an
 ### 1️⃣ Clone Repository
 
 ```bash
-git clone https://github.com/Pavansai20054/k8s-hpa-demo.git
-cd k8s-hpa-demo
+git clone https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
+
+cd "AI-Backend-Hiring-Tasks-Prodigal-AI/Task 4 - Kubernetes Pod Scaling/k8s-hpa-demo"
 ```
 
 > ⚠️ Note: Before starting with step 2 make sure you turn on your docker desktop and it should be running. 

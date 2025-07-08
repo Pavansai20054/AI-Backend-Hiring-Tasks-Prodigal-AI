@@ -1,7 +1,6 @@
 import asyncio
 from playwright.async_api import async_playwright
 import json
-import csv
 from datetime import datetime
 from colorama import Fore, Style, init
 import sys
@@ -28,30 +27,27 @@ def print_header():
     print(Style.RESET_ALL)
     print(Fore.YELLOW + " MyScheme Government Scheme Scraper " + Style.RESET_ALL)
     print(Fore.GREEN + "="*60 + Style.RESET_ALL)
-    print(Fore.MAGENTA + " • Scrapes government schemes with title, URL, ministry and description")
-    print(Fore.MAGENTA + " • Saves results in CSV and JSON formats")
+    print(Fore.MAGENTA + " • Scrapes government schemes with title, URL, and content")
+    print(Fore.MAGENTA + " • Saves results in JSON format")
     print(Fore.MAGENTA + " • Interactive progress tracking")
     print(Fore.GREEN + "="*60 + Style.RESET_ALL)
 
-def create_output_directories():
-    """Use the existing output directory structure"""
+def create_output_directory():
+    """Create output directory structure"""
     # Get the current script directory (article_scheme_scraper folder)
     script_dir = Path(__file__).parent
     
-    # Go up one level to project root, then to existing outputs folder
+    # Go up one level to project root, then to outputs folder
     project_root = script_dir.parent
-    csv_output_path = project_root / "outputs" / "myscehme-schemes" / "csv-files"
     json_output_path = project_root / "outputs" / "myscehme-schemes" / "json-files"
     
-    # Ensure directories exist (they should already exist)
-    csv_output_path.mkdir(parents=True, exist_ok=True)
+    # Ensure directory exists
     json_output_path.mkdir(parents=True, exist_ok=True)
     
-    print(Fore.CYAN + f"📁 Using existing output directories:" + Style.RESET_ALL)
-    print(Fore.WHITE + "   • CSV: " + Fore.GREEN + "outputs/myscehme-schemes/csv-files" + Style.RESET_ALL)
+    print(Fore.CYAN + f"📁 Using output directory:" + Style.RESET_ALL)
     print(Fore.WHITE + "   • JSON: " + Fore.GREEN + "outputs/myscehme-schemes/json-files" + Style.RESET_ALL)
     
-    return csv_output_path, json_output_path
+    return json_output_path
 
 async def show_progress(current, total):
     """Animated progress bar"""
@@ -67,65 +63,11 @@ async def show_progress(current, total):
     sys.stdout.write(f"\r[{progress_bar}] {percent}% ({current}/{total} schemes)")
     sys.stdout.flush()
 
-BASE_URL = "https://www.myscheme.gov.in/search"
-
-async def extract_schemes_from_page(page):
-    try:
-        # Further reduced timeout from 2000 to 1000
-        await page.wait_for_selector('h2 a', timeout=1000)
-    except Exception:
-        print(Fore.YELLOW + "⚠ Could not find scheme listings" + Style.RESET_ALL)
-        return []
-
-    scheme_blocks = await page.query_selector_all('div.flex.flex-row.items-center.justify-between')
-    results = []
-
-    for block in scheme_blocks:
-        try:
-            # Ultra-fast scrolling with instant behavior and minimal delay
-            await page.evaluate("(el) => el.scrollIntoView({behavior: 'instant', block: 'center'})", block)
-            await asyncio.sleep(0.02)  # Reduced from 0.05 to 0.02 for much faster scrolling
-
-            # Title & URL
-            title_elem = await block.query_selector('h2 a')
-            if not title_elem:
-                continue
-                
-            # Parallelize data extraction where possible
-            title_future = title_elem.inner_text()
-            url_future = title_elem.get_attribute('href')
-            title, url = await asyncio.gather(title_future, url_future)
-            
-            url = f"https://www.myscheme.gov.in{url}" if url else None
-
-            # Ministry
-            ministry = None
-            ministry_elem = await block.query_selector('h2.mt-3')
-            if ministry_elem:
-                ministry = (await ministry_elem.inner_text()).strip()
-
-            # Description
-            description = None
-            desc_elem = await block.query_selector('span.mt-3')
-            if desc_elem:
-                description = (await desc_elem.inner_text()).strip()
-
-            results.append({
-                "title": title.strip(),
-                "url": url,
-                "ministry": ministry,
-                "description": description,
-            })
-        except Exception as e:
-            continue
-
-    return results
-
 async def scrape_myscheme():
     print_header()
     
-    # Create output directories
-    csv_output_path, json_output_path = create_output_directories()
+    # Create output directory
+    json_output_path = create_output_directory()
     
     # Get user input with validation and emoji feedback
     while True:
@@ -140,16 +82,15 @@ async def scrape_myscheme():
     
     print(Fore.CYAN + "\n🚀 Starting scrape..." + Style.RESET_ALL)
     start_time = datetime.now()
-    all_results = []
-    current_page = 1
-    consecutive_failed_pages = 0
+    data = []
+    seen_titles = set()
+    scraped = 0
     
     async with async_playwright() as p:
-        # Much faster browser launch - removed slow_mo, optimized settings
+        # Browser launch with optimized settings
         print(Fore.BLUE + "\n🖥️  Launching browser... (this may take a moment)" + Style.RESET_ALL)
         browser = await p.chromium.launch(
-            headless=False,
-            # Removed slow_mo completely for faster execution
+            headless=True,
             args=[
                 '--disable-dev-shm-usage',
                 '--disable-extensions',
@@ -161,23 +102,17 @@ async def scrape_myscheme():
                 '--disable-renderer-backgrounding'
             ]
         )
-        context = await browser.new_context(
+        
+        page = await browser.new_page(
             viewport={"width": 1280, "height": 800},
-            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-            # Faster loading optimizations
-            java_script_enabled=True,
-            bypass_csp=True,
-            ignore_https_errors=True,
-            # Disable images and CSS for faster loading
-            # extra_http_headers={'Accept-Language': 'en-US,en;q=0.9'}
+            user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
         )
-        page = await context.new_page()
 
-        # Ultra-fast navigation with very aggressive timeout reduction
+        # Navigation
         print(Fore.BLUE + "\n🌐 Navigating to MyScheme.gov.in..." + Style.RESET_ALL)
         try:
-            await page.goto(BASE_URL, timeout=5000)  # Reduced from 8000 to 5000
-            await page.wait_for_load_state("domcontentloaded")  # Faster than "networkidle"
+            await page.goto("https://www.myscheme.gov.in/search", timeout=5000)
+            await page.wait_for_load_state("domcontentloaded")
             print(Fore.GREEN + "✔ Successfully loaded the scheme search page" + Style.RESET_ALL)
         except Exception as e:
             print(Fore.RED + f"✖ Failed to load page: {str(e)}" + Style.RESET_ALL)
@@ -187,62 +122,76 @@ async def scrape_myscheme():
         # Scraping process with animated progress
         print(Fore.CYAN + "\n🔍 Scraping schemes..." + Style.RESET_ALL)
         
-        while len(all_results) < num_schemes and consecutive_failed_pages < 3:
+        current_page = 1
+        while scraped < num_schemes:
             print(Fore.BLUE + f"\n📄 Processing page {current_page}..." + Style.RESET_ALL)
             
-            page_results = await extract_schemes_from_page(page)
-            
-            if not page_results:
-                print(Fore.YELLOW + "⚠ No schemes found on this page." + Style.RESET_ALL)
-                consecutive_failed_pages += 1
-                if consecutive_failed_pages >= 3:
-                    print(Fore.YELLOW + "⚠ Too many consecutive failed pages, stopping..." + Style.RESET_ALL)
+            cards = await page.query_selector_all('div.rounded-xl.shadow-md.overflow-hidden')
+            for card in cards:
+                if scraped >= num_schemes:
                     break
-                continue
-            
-            # Reset failed pages counter if we found results
-            consecutive_failed_pages = 0
-            
-            for scheme in page_results:
-                if scheme not in all_results:
-                    all_results.append(scheme)
-                    await show_progress(len(all_results), num_schemes)
-                    if len(all_results) >= num_schemes:
-                        break
-
-            if len(all_results) >= num_schemes:
-                break
-
-            # Ultra-fast pagination with minimal waits
-            try:
-                next_page = current_page + 1
-                page_btn = await page.query_selector(f'li:has-text("{next_page}")')
-                
-                if page_btn:
-                    print(Fore.BLUE + f"\n⏩ Clicking page {next_page}..." + Style.RESET_ALL)
-                    await page_btn.click()
-                    # Ultra-fast wait time and simplified logic
-                    try:
-                        await page.wait_for_selector('div.flex.flex-row', timeout=800)  # Reduced from 1500
-                        await asyncio.sleep(0.2)  # Reduced from 0.5 for faster page loads
-                    except:
-                        # If wait_for_selector fails, just add a tiny delay
-                        await asyncio.sleep(0.5)  # Reduced from 1
                     
+                title, link, content = "", "", ""
+                title_el = await card.query_selector('a.block.text-lg.leading-tight.font-medium')
+                if title_el:
+                    title = (await title_el.inner_text()).strip()
+                    # Avoid duplicate scraping due to stale DOM or slow page change!
+                    if title in seen_titles:
+                        continue
+                    seen_titles.add(title)
+                    link = await title_el.get_attribute('href')
+                    if link and link.startswith("/"):
+                        link = f"https://www.myscheme.gov.in{link}"
+                        
+                if link:
+                    try:
+                        detail_page = await browser.new_page()
+                        await detail_page.goto(link)
+                        await detail_page.wait_for_load_state("domcontentloaded")
+                        await detail_page.wait_for_timeout(1000)
+                        content_el = await detail_page.query_selector('div.prose')
+                        if not content_el:
+                            content_el = await detail_page.query_selector('main')
+                        if content_el:
+                            content = (await content_el.inner_text()).strip()
+                        await detail_page.close()
+                    except Exception:
+                        content = ""
+                        
+                data.append({
+                    "title": title,
+                    "url": link,
+                    "content": content
+                })
+                scraped += 1
+                await show_progress(scraped, num_schemes)
+
+            # Pagination: go to next page if needed
+            if scraped < num_schemes:
+                next_page_num = current_page + 1
+                next_btn = await page.query_selector(
+                    f'li.h-8.w-8.text-darkblue-900.flex.items-center.justify-center.text-base.mx-1.rounded-full:has-text("{next_page_num}")'
+                )
+                if next_btn:
+                    first_title_el = await page.query_selector('div.rounded-xl.shadow-md.overflow-hidden a.block.text-lg.leading-tight.font-medium')
+                    first_title = await first_title_el.inner_text() if first_title_el else ""
+                    await next_btn.click()
+                    await page.wait_for_function(
+                        f'''
+                        () => {{
+                            const el = document.querySelector('div.rounded-xl.shadow-md.overflow-hidden a.block.text-lg.leading-tight.font-medium');
+                            return el && el.innerText.trim() !== `{first_title.strip()}`;
+                        }}
+                        ''',
+                        timeout=10000
+                    )
                     current_page += 1
                     print(Fore.GREEN + f"✔ Successfully navigated to page {current_page}" + Style.RESET_ALL)
                 else:
-                    print(Fore.YELLOW + "\nℹ️  No more pages available (no next button found)" + Style.RESET_ALL)
-                    break
-            except Exception as e:
-                print(Fore.RED + f"\n⚠ Error navigating to next page: {str(e)}" + Style.RESET_ALL)
-                consecutive_failed_pages += 1
-                if consecutive_failed_pages >= 3:
-                    print(Fore.YELLOW + "⚠ Too many pagination failures, stopping..." + Style.RESET_ALL)
+                    print(Fore.YELLOW + "\nℹ️  No more pages available" + Style.RESET_ALL)
                     break
 
         # Close browser
-        await context.close()
         await browser.close()
         print(Fore.GREEN + "\n✔ Scraping completed!" + Style.RESET_ALL)
 
@@ -254,7 +203,7 @@ async def scrape_myscheme():
         """ + Style.RESET_ALL)
         
         print(Fore.YELLOW + "="*60 + Style.RESET_ALL)
-        print(Fore.CYAN + f"📊 Schemes collected: {Fore.GREEN}{len(all_results)}" + Style.RESET_ALL)
+        print(Fore.CYAN + f"📊 Schemes collected: {Fore.GREEN}{len(data)}" + Style.RESET_ALL)
         print(Fore.CYAN + f"📖 Pages processed: {Fore.GREEN}{current_page}" + Style.RESET_ALL)
         
         # Calculate duration
@@ -263,12 +212,12 @@ async def scrape_myscheme():
         print(Fore.YELLOW + "="*60 + Style.RESET_ALL)
         
         # Save results
-        if all_results:
+        if data:
             print(Fore.CYAN + "\n💾 Saving results..." + Style.RESET_ALL)
             # Limit to requested number of schemes
-            final_data = all_results[:num_schemes]
+            final_data = data[:num_schemes]
 
-            # Create meaningful filenames
+            # Create meaningful filename
             date_str = datetime.now().strftime("%Y-%m-%d")
             time_str = datetime.now().strftime("%H%M")
             scheme_count = len(final_data)
@@ -276,23 +225,14 @@ async def scrape_myscheme():
             # Generate descriptive filename
             base_name = f"myscheme_gov_schemes_{scheme_count}items_{date_str}_{time_str}"
             
-            # Create full file paths using the designated directories
-            csv_file = csv_output_path / f"{base_name}.csv"
+            # Create full file path using the designated directory
             json_file = json_output_path / f"{base_name}.json"
 
             # Save JSON
             with open(json_file, "w", encoding="utf-8") as f:
                 json.dump(final_data, f, indent=2, ensure_ascii=False)
 
-            # Save CSV
-            with open(csv_file, "w", encoding="utf-8", newline='') as csvfile:
-                fieldnames = ["title", "url", "ministry", "description"]
-                writer = csv.DictWriter(csvfile, fieldnames=fieldnames, quoting=csv.QUOTE_ALL)
-                writer.writeheader()
-                writer.writerows(final_data)
-
-            print(Fore.GREEN + f"\n✔ Files saved:" + Style.RESET_ALL)
-            print(Fore.WHITE + "   • " + Fore.GREEN + f"outputs/myscehme-schemes/csv-files/{csv_file.name}" + Style.RESET_ALL)
+            print(Fore.GREEN + f"\n✔ File saved:" + Style.RESET_ALL)
             print(Fore.WHITE + "   • " + Fore.GREEN + f"outputs/myscehme-schemes/json-files/{json_file.name}" + Style.RESET_ALL)
             
             # Show sample of collected data

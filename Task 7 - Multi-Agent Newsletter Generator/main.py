@@ -1,141 +1,118 @@
 import os
 from datetime import datetime, timedelta
 from colorama import init, Fore, Back, Style
-import platform
-
-from scraping import SCRAPER_FUNCS
-from config import SIMULATION_DAYS, TOP_N_ARTICLES
+from typing import Optional
+import asyncio
+from config import config
+from agents import NewsletterAgents
+from chroma_manager import ChromaManager
 from summarizer import summarize_articles
 from newsletter import compose_newsletter
-from telegram_bot import send_newsletter
+from telegram_bot import TelegramBot
 
-# Initialize colorama
 init(autoreset=True)
 
-# Define the output directory for markdown files
-MARKDOWN_DIR = os.path.join(
-    os.path.dirname(__file__),
-    "markdown_files"
-)
-os.makedirs(MARKDOWN_DIR, exist_ok=True)
-
-def clear_screen():
-    if platform.system() == "Windows":
-        os.system('cls')
-    else:
-        os.system('clear')
-
-# Futuristic symbols
-SYM_SUCCESS = "◈"  # Diamond
-SYM_WARNING = "⌾"  # Square
-SYM_ERROR = "⚡"    # Lightning
-SYM_INFO = "◌"     # Circle
-SYM_PROGRESS = "⇶" # Triple arrow
-SYM_HEADER = "≋"   # Waves
+# Define colorful symbols and styles
+SYM_INFO = f"{Fore.CYAN}ℹ{Style.RESET_ALL}"
+SYM_SUCCESS = f"{Fore.GREEN}✓{Style.RESET_ALL}"
+SYM_WARNING = f"{Fore.YELLOW}⚠{Style.RESET_ALL}"
+SYM_ERROR = f"{Fore.RED}✗{Style.RESET_ALL}"
+SYM_AGENT = f"{Fore.MAGENTA}⚙{Style.RESET_ALL}"
 
 def print_header(text):
-    print(Fore.CYAN + Style.BRIGHT + SYM_HEADER * 50)
-    print(Fore.MAGENTA + Style.BRIGHT + text.center(50))
-    print(Fore.CYAN + Style.BRIGHT + SYM_HEADER * 50 + Style.RESET_ALL)
+    print(f"\n{Fore.BLUE}╒{'═'*(len(text)+2)}╕")
+    print(f"│ {Fore.CYAN}{text.upper()}{Fore.BLUE} │")
+    print(f"╘{'═'*(len(text)+2)}╛{Style.RESET_ALL}")
 
-def print_success(text):
-    print(Fore.GREEN + Style.BRIGHT + f"{SYM_SUCCESS} {text}" + Style.RESET_ALL)
+def print_agent_status(agent_name, status, message):
+    colors = {
+        'start': Fore.BLUE,
+        'working': Fore.YELLOW,
+        'success': Fore.GREEN,
+        'error': Fore.RED
+    }
+    print(f"{SYM_AGENT} {colors.get(status, Fore.WHITE)}{agent_name}: {message}{Style.RESET_ALL}")
 
-def print_warning(text):
-    print(Fore.YELLOW + Style.BRIGHT + f"{SYM_WARNING} {text}" + Style.RESET_ALL)
-
-def print_error(text):
-    print(Fore.RED + Style.BRIGHT + f"{SYM_ERROR} {text}" + Style.RESET_ALL)
-
-def print_info(text):
-    print(Fore.BLUE + Style.BRIGHT + f"{SYM_INFO} {text}" + Style.RESET_ALL)
-
-def print_progress(text):
-    print(Fore.CYAN + Style.BRIGHT + f"{SYM_PROGRESS} {text}" + Style.RESET_ALL)
-
-def fetch_all_articles(day_offset=0, articles_per_day=10):
-    articles = []
-    for func in SCRAPER_FUNCS:
-        try:
-            arts = func(day_offset=day_offset, articles_per_day=articles_per_day)
-            if hasattr(arts, '__iter__') and not isinstance(arts, list):
-                arts = list(arts)
-            articles.extend(arts)
-        except Exception as e:
-            print_error(f"Error scraping {func.__name__}: {e}")
-    
-    source_counts = {}
-    for a in articles:
-        source = a.get("source", "Unknown")
-        source_counts[source] = source_counts.get(source, 0) + 1
-    print_info(f"Articles per source: {source_counts}")
-    return articles
-
-def deduplicate_articles(articles):
-    seen = set()
-    deduped = []
-    for art in articles:
-        key = (art.get("title"), art.get("url"))
-        if key not in seen:
-            deduped.append(art)
-            seen.add(key)
-    print_success(f"Deduplicated to {len(deduped)} articles.")
-    return deduped
-
-def select_top_n_articles(articles, n):
-    top_articles = articles[:n]
-    print_success(f"Selected top {n} articles.")
-    return top_articles
-
-def run_newsletter_day(day_str, day_offset, top_n=10):
-    print_header(f"📡 DAY {day_str} | NEWS COLLECTION")
-    
-    print_progress("Scanning news sources across the web...")
-    articles = fetch_all_articles(day_offset=day_offset, articles_per_day=top_n*2)
-    print_info(f"Acquired {len(articles)} raw data points")
-    
-    print_progress("Filtering duplicate transmissions...")
-    articles = deduplicate_articles(articles)
-    
-    print_progress("Isolating priority signals...")
-    articles = select_top_n_articles(articles, top_n)
-
-    print_progress("Analyzing content with neural networks...")
-    summaries = summarize_articles(articles)
-    
-    print_progress("Compiling final transmission...")
-    newsletter = compose_newsletter(day_str, summaries)
-
-    filename = f"newsletter_{day_str}.md"
-    filepath = os.path.join(MARKDOWN_DIR, filename)
-    with open(filepath, "w", encoding="utf-8") as f:
-        f.write(newsletter)
-    print_success(f"Data archived to {Fore.MAGENTA}{filepath}")
-
-    print_progress("Initiating broadcast sequence...")
+async def run_newsletter_day(day_str: str, day_offset: int = 0, top_n: int = 10) -> Optional[str]:
     try:
-        send_newsletter(newsletter)
-        print_success("Transmission successful!")
+        print_header(f"processing day {day_str}")
+        
+        # Initialize LLM
+        print_agent_status("LLM Agent", "start", "Initializing Ollama...")
+        from langchain_ollama import OllamaLLM
+        llm = OllamaLLM(model="llama3:8b")
+        print_agent_status("LLM Agent", "success", "Ready to generate summaries")
+        
+        # Initialize agents
+        print_agent_status("News Agents", "start", "Initializing pipeline...")
+        agents = NewsletterAgents(llm)
+        
+        # Run agent pipeline
+        print_agent_status("Scraper Agent", "working", "Fetching articles...")
+        articles = agents.run_pipeline(day_offset, top_n*2)
+        print_agent_status("Scraper Agent", "success", f"Found {len(articles)} articles")
+        
+        # Store in ChromaDB
+        if hasattr(chroma, 'available') and chroma.available:
+            print_agent_status("VectorDB Agent", "working", "Storing articles...")
+            chroma.add_articles(articles)
+            print_agent_status("VectorDB Agent", "success", "Articles stored")
+        
+        # Summarize articles
+        print_agent_status("Summarizer Agent", "working", "Generating summaries...")
+        summaries = summarize_articles(articles[:top_n])
+        print_agent_status("Summarizer Agent", "success", f"Generated {len(summaries)} summaries")
+        
+        # Compose newsletter
+        print_agent_status("Composer Agent", "working", "Formatting newsletter...")
+        newsletter = compose_newsletter(day_str, summaries)
+        print_agent_status("Composer Agent", "success", "Newsletter composed")
+        
+        # Send to Telegram
+        if "test" not in day_str.lower():
+            print_agent_status("Telegram Agent", "working", "Sending newsletter...")
+            await telegram_bot.send_newsletter(newsletter)  # Fixed: removed _async suffix
+            print_agent_status("Telegram Agent", "success", "Newsletter sent")
+        
+        return newsletter
+        
     except Exception as e:
-        print_error(f"Broadcast failure: {e}")
+        print_agent_status("System", "error", f"Pipeline error: {e}")
+        return None
 
-def simulate_days(n_days, top_n=10):
+def simulate_days(n_days: int = 2):
     now = datetime.now()
     for i in range(n_days):
         day = now + timedelta(days=i)
-        run_newsletter_day(day_str=day.strftime("%Y-%m-%d"), day_offset=i, top_n=top_n)
+        asyncio.run(run_newsletter_day(
+            day_str=day.strftime("%Y-%m-%d"), 
+            day_offset=i, 
+            top_n=config['TOP_N_ARTICLES']
+        ))
 
 if __name__ == "__main__":
-    clear_screen()
-    print_header("🌌 WEB3 NEWS NETWORK v1.0")
-    print(Fore.YELLOW + Style.BRIGHT + "Initializing quantum news aggregation matrix..." + Style.RESET_ALL)
-    print(Fore.CYAN + f"System parameters: {SIMULATION_DAYS} cycles, {TOP_N_ARTICLES} priority signals" + Style.RESET_ALL)
-    print()
-    
     try:
-        simulate_days(SIMULATION_DAYS, top_n=TOP_N_ARTICLES)
-        print_header("✅ MISSION COMPLETE")
-        print(Fore.GREEN + Style.BRIGHT + "All transmissions processed successfully!" + Style.RESET_ALL)
+        print_header("web3 newsletter generator")
+        print(f"{SYM_INFO} {Fore.CYAN}Initializing components...{Style.RESET_ALL}")
+        
+        chroma = ChromaManager()
+        telegram_bot = TelegramBot()
+        
+        print(f"{SYM_INFO} {Fore.CYAN}Sources: {', '.join(config['PUBLICATIONS'])}{Style.RESET_ALL}")
+        print(f"{SYM_INFO} {Fore.CYAN}Top articles per day: {config['TOP_N_ARTICLES']}{Style.RESET_ALL}")
+        
+        if config['SIMULATION_DAYS'] > 0:
+            print(f"{SYM_INFO} {Fore.CYAN}Simulating {config['SIMULATION_DAYS']} days{Style.RESET_ALL}")
+            simulate_days(config['SIMULATION_DAYS'])
+        else:
+            print(f"{SYM_INFO} {Fore.CYAN}Running for current day{Style.RESET_ALL}")
+            asyncio.run(run_newsletter_day(
+                day_str=datetime.now().strftime("%Y-%m-%d"),
+                day_offset=0,
+                top_n=config['TOP_N_ARTICLES']
+            ))
+        
+        print(f"\n{SYM_SUCCESS} {Fore.GREEN}All tasks completed successfully!{Style.RESET_ALL}")
+        
     except Exception as e:
-        print_error(f"System critical error: {e}")
-        print(Fore.RED + Style.BRIGHT + "Emergency shutdown initiated!" + Style.RESET_ALL)
+        print(f"\n{SYM_ERROR} {Fore.RED}Fatal error: {e}{Style.RESET_ALL}")

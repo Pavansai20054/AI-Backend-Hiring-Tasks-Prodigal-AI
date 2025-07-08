@@ -1,875 +1,450 @@
-# 🚀 Advanced Web Scraper Suite: Microsoft Research Blog & MyScheme.gov.in
+# 📰 AI-Backend Article & Scheme Scraper Suite
 
-<div align="center">
-
-[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/downloads/)
-[![Playwright](https://img.shields.io/badge/Playwright-Latest-green?style=for-the-badge&logo=playwright&logoColor=white)](https://playwright.dev/)
-[![License](https://img.shields.io/badge/License-Proprietary-yellow?style=for-the-badge)](../LICENSE)
-![Status](https://img.shields.io/badge/Status-Production%20Ready-success?style=for-the-badge)
-
-*A robust, enterprise-grade Python solution for automated data extraction from dynamic web platforms*
-
-</div>
+![Python](https://img.shields.io/badge/Python-3.8+-blue?logo=python) 
+![Playwright](https://img.shields.io/badge/Playwright-Automation-green?logo=playwright)
+![Colorama](https://img.shields.io/badge/Colorama-Terminal-orange)
+![License](https://img.shields.io/badge/License-Copyright-red)
+![Platform](https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-important)
 
 ---
 
-## 📋 Table of Contents
+🚀 A powerful, professional, and interactive suite for scraping **Microsoft Research Blogs** and **Indian Government Schemes (MyScheme.gov.in)** with robust features, beautiful terminal UI, and flexible cross-platform support.  
+✨ Automates the extraction of full articles, metadata, and government scheme details into organized JSON files for your research or data needs.
 
-- [🎯 Project Overview](#-project-overview)
-- [✨ Key Features](#-key-features)
-- [🏗️ System Architecture](#️-system-architecture)
-- [🔄 Processing Pipelines](#-processing-pipelines)
-- [📊 What This Scraper Does](#-what-this-scraper-does)
-- [🛠️ Prerequisites](#️-prerequisites)
-- [⚡ Quick Start Guide](#-quick-start-guide)
-- [📦 Installation Methods](#-installation-methods)
-- [🚀 Usage Examples](#-usage-examples)
-- [📁 Project Structure](#-project-structure)
-- [🔍 Technical Deep Dive](#-technical-deep-dive)
-- [📈 Performance & Capabilities](#-performance--capabilities)
-- [🛡️ Anti-Bot Protection](#️-anti-bot-protection)
-- [📊 Sample Outputs](#-sample-outputs)
-- [🔧 Troubleshooting](#-troubleshooting)
-- [🎨 Visual Documentation](#-visual-documentation)
-- [🎬 Video](#video)
-- [📞 Contact & Support](#-contact--support)
-- [📄 License](#-license)
+> **Author:** 👨‍💻 [PAVANSAI RANGDAL](https://www.github.com/Pavansai20054)  
+> **Contact:** 📧 pavansai87654321@gmail.com
 
 ---
 
-## 🎯 Project Overview
+## ▶️ Demo Video
 
-This repository contains a **professional-grade web scraping solution** designed to extract structured data from two complex, JavaScript-heavy websites:
-
-### 🔬 **Microsoft Research Blog Scraper**
-- **Target**: [Microsoft Research Blog](https://www.microsoft.com/en-us/research/blog/)
-- **Purpose**: Automated extraction of research article metadata including titles, descriptions, publication dates, and direct links
-- **Challenge**: Dynamic content loading, variable HTML structures, complex pagination systems
-- **Output**: Comprehensive research database in CSV/JSON format
-
-### 🏛️ **MyScheme.gov.in Scraper**
-- **Target**: [MyScheme - Government of India](https://www.myscheme.gov.in/)
-- **Purpose**: Systematic collection of Indian government scheme information
-- **Challenge**: Single-page application (SPA) architecture, containerized scrolling, dynamic content rendering
-- **Output**: Structured government scheme database with ministry details, descriptions, and official links
-
-Both scrapers are built with **enterprise-level robustness**, featuring advanced anti-detection mechanisms, comprehensive error handling, and production-ready data export capabilities.
+Watch the demonstration of the Article & Scheme Scraper Suite here:  
+**[🟢 Demo Video (Google Drive Link)](https://drive.google.com/file/d/19A8JaV-oEhIc61HMVp_DkJKwLkNT2hep/view?usp=sharing)**
 
 ---
 
-## ✨ Key Features
+## 📑 Table of Contents
 
-### 🎯 **Core Capabilities**
-- 🤖 **Intelligent Browser Automation** - Powered by Playwright for handling modern web applications
-- 🔄 **Dynamic Content Handling** - Expertly manages JavaScript-rendered content and AJAX loading
-- 🛡️ **Anti-Detection Technology** - Human-like browsing patterns to avoid bot detection
-- 📊 **Multi-Format Export** - Outputs data in both CSV and JSON with timestamps
-- 🎨 **Real-Time Progress Tracking** - Colorful terminal feedback with progress bars
-- ⚡ **High Performance** - Optimized for speed while maintaining data integrity
-
-### 🔧 **Technical Excellence**
-- 🎯 **Selector Resilience** - Multiple fallback selectors for changing HTML structures
-- 🚨 **Comprehensive Error Handling** - Graceful failure recovery without data loss
-- 📝 **Detailed Logging** - Complete audit trail of scraping operations
-- 🔄 **Pagination Management** - Intelligent navigation through multi-page content
-- 🎛️ **Configurable Parameters** - Customizable scraping depth and behavior
-- 📱 **Cross-Platform Compatibility** - Works on Windows, macOS, and Linux
-
----
-
-## 🏗️ System Architecture
-
-### 📊 System Flow Diagram
-
-```
-┌─────────────────────────────────────────────────────────────────────────────────┐
-│                          🚀 WEB SCRAPER SUITE                                   │
-│                        Enterprise-Grade Architecture                             │
-└─────────────────────────────────────────────────────────────────────────────────┘
-
-                                    ┌─────────────────┐
-                                    │  🚀 SCRAPER     │
-                                    │  INITIALIZATION │
-                                    │                 │
-                                    │ • Config Load   │
-                                    │ • Environment   │
-                                    │ • Parameters    │
-                                    └─────────┬───────┘
-                                              │
-                                              ▼
-                                    ┌─────────────────┐
-                                    │  🌐 BROWSER     │
-                                    │  LAUNCH         │
-                                    │                 │
-                                    │ • Playwright    │
-                            ┌───────┤ • Chromium      ├───────┐
-                            │       │ • User Agent    │       │
-                            │       └─────────┬───────┘       │
-                            │                 │               │
-                            ▼                 ▼               ▼
-                  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-                  │ 🤖 HUMAN-LIKE   ││  📄 PAGE        │ │ 🎭 BROWSER      │
-                  │ DELAYS          │ │  NAVIGATION     │ │ FINGERPRINTING  │
-                  │                 │ │                 │ │                 │
-                  │ • Random Wait   │ │ • URL Loading   │ │ • Headers       │
-                  │ • Rate Limit    │ │ • SSL Handling  │ │ • Viewport      │
-                  │ • Throttle      │ │ • Redirects     │ │ • Language      │
-                  └─────────────────┘ └─────────┬───────┘ └─────────────────┘
-                                              │
-                                              ▼
-                                    ┌─────────────────┐
-                                    │  ⏳ DYNAMIC     │
-                                    │  CONTENT WAIT   │
-                                    │                 │
-                                    │ • DOM Ready     │
-                                    │ • JS Execution  │
-                                    │ • AJAX Loading  │
-                                    └─────────┬───────┘
-                                              │
-                                              ▼
-                                    ┌─────────────────┐
-                                    │  🔍 ELEMENT     │
-                                    │  DETECTION      │
-                                    │                 │
-                                    │ • Selectors     │
-                                    │ • Validation    │
-                                    └─────────┬───────┘
-                                              │
-                                              ▼
-                                    ┌─────────────────┐
-                                    │  📊 DATA        │
-                            ┌───────┤  EXTRACTION     ├───────┐
-                            │       │                 │       │
-                            │       │ • Text Content  │       │
-                            │       │ • Links & URLs  │       │
-                            │       │ • Metadata      │       │
-                            │       └─────────┬───────┘       │
-                            │                 │               │
-                            ▼                 ▼               ▼
-                  ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐
-                  │ 🔄 REQUEST     │ │   ✅ DATA       │ │ 📝 ERROR        │
-                  │ RANDOMIZATION   │ │  VALIDATION     │ │ HANDLING        │
-                  │                 │ │                 │ │                 │
-                  │ • Headers       │ │ • Format Check  │ │ • Try/Catch     │
-                  │ • Timing        │ │ • Completeness  │ │ • Retry Logic   │
-                  │ • Patterns      │ │ • Sanitization  │ │ • Graceful Exit │
-                  └─────────────────┘ └─────────┬───────┘ └─────────────────┘
-                                              │
-                                              ▼
-                                    ┌─────────────────┐
-                                    │  💾 STORAGE     │
-                                    │  PROCESSING     │
-                                    │                 │
-                                    │ • Data Clean    │
-                                    │ • Structure     │
-                                    │ • Timestamps    │
-                                    └─────────┬───────┘
-                                              │
-                                              ▼
-                                    ┌─────────────────┐
-                                    │  📋 OUTPUT      │
-                                    │  GENERATION     │
-                                    │                 │
-                                    │ • CSV Export    │
-                                    │ • JSON Export   │
-                                    └─────────────────┘
-```
-
-### 🔧 Component Breakdown
-
-| **Stage** | **Component** | **Function** | **Key Features** |
-|-----------|---------------|--------------|------------------|
-| **1** | 🚀 **Initialization** | System Setup | Config loading, environment validation |
-| **2** | 🌐 **Browser Launch** | Playwright Setup | Chromium instance, user agent config |
-| **3** | 📄 **Navigation** | Page Loading | URL handling, SSL, redirects |
-| **4** | ⏳ **Content Wait** | Dynamic Loading | DOM ready, JS execution, AJAX |
-| **5** | 🔍 **Element Detection** | Selector Logic | Multiple selectors, fallback handling |
-| **6** | 📊 **Data Extraction** | Content Parsing | Text, links, metadata extraction |
-| **7** | ✅ **Validation** | Quality Control | Format checking, completeness validation |
-| **8** | 💾 **Storage** | Data Processing | Cleaning, structuring, timestamping |
-| **9** | 📋 **Output** | File Generation | CSV/JSON export |
-
-### 🛡️ Anti-Detection Security Layer
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    🛡️ STEALTH PROTECTION MATRIX                │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  🤖 BEHAVIORAL MIMICRY          🎭 IDENTITY MASKING            │
-│  ┌─────────────────────┐        ┌─────────────────────┐         │
-│  │ • Random Delays     │        │ • Real User Agents  │         │
-│  │ • Human Scroll      │        │ • Browser Headers   │         │
-│  │ • Mouse Simulation  │        │ • Viewport Sizes    │         │
-│  │ • Typing Patterns   │        │ • Language Settings │         │
-│  └─────────────────────┘        └─────────────────────┘         │
-│                                                                 │
-│  🔄 REQUEST DIVERSIFICATION     📊 TRAFFIC ANALYSIS            │
-│  ┌─────────────────────┐        ┌──────────────────────┐        │
-│  │ • Header Rotation   │        │ • Rate Monitoring    │        │
-│  │ • Timing Variance   │        │ • Success Tracking   │        │
-│  │ • Pattern Breaking  │        │ • Error Analytics    │        │
-│  │ • Session Handling  │        │ • Performance Metrics│        │
-│  └─────────────────────┘        └──────────────────────┘        │
-└─────────────────────────────────────────────────────────────────┘
-```
+1. [🚀 Project Overview](#-project-overview)
+2. [📂 Directory Structure](#-directory-structure)
+3. [🛠️ Features](#️-features)
+   1. [Microsoft Research Scraper](#microsoft-research-scraper)
+   2. [MyScheme Government Scheme Scraper](#myscheme-government-scheme-scraper)
+4. [💻 Supported Platforms](#-supported-platforms)
+5. [🔗 Repository & Clone Instructions](#-repository--clone-instructions)
+6. [⚙️ Installation & Setup](#️-installation--setup)
+   1. [Python Virtual Environment](#python-virtual-environment)
+   2. [Conda Environment](#conda-environment)
+7. [📦 Dependency Management](#-dependency-management)
+8. [🎮 How to Run the Scrapers](#-how-to-run-the-scrapers)
+   1. [Microsoft Research Blog Scraper](#microsoft-research-blog-scraper-1)
+   2. [MyScheme Scheme Scraper](#myscheme-scheme-scraper)
+9. [📁 Output & File Formats](#-output--file-formats)
+10. [🖥️ Screenshots & Terminal UI Samples](#️-screenshots--terminal-ui-samples)
+11. [⚡ Troubleshooting & Tips](#-troubleshooting--tips)
+12. [🙋‍♂️ FAQ](#️-faq)
+13. [🤝 Contact](#-contact)
+14. [🔒 License](#-license)
 
 ---
 
-## 🔄 Processing Pipelines
+## 🚀 Project Overview
 
-### 🔬 **Microsoft Research Pipeline**
+🎯 This comprehensive suite contains two ready-to-use, professional web scrapers designed for maximum efficiency and user experience:
 
-```
-Microsoft Research Blog
-        │
-        ▼
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  📊 PAGINATION  │───▶│  📰 ARTICLES    │───▶│  📋 METADATA   │
-│                 │     │                 │     │                 │
-│ • Page Numbers  │     │ • Title Extract │     │ • Publication   │
-│ • Next Button   │     │ • Link Capture  │     │ • Authors       │
-│ • Load More     │     │ • Description   │     │ • Categories    │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-        │                       │                       │
-        │                       │                       │
-        └───────────────────────┼───────────────────────┘
-                                │
-                                ▼
-                    ┌─────────────────────┐
-                    │  📊 RESEARCH DATA   │
-                    │  CONSOLIDATION      │
-                    │                     │
-                    │ • CSV Generation    │
-                    │ • JSON Structure    │
-                    └─────────────────────┘
-```
+- **🔬 Microsoft Research Blog Scraper:**  
+  📄 Scrapes full-length articles (including all metadata, authors, and social links) from the Microsoft Research blog, saving them as organized JSON files. 🎨 Features intelligent content extraction with full article text, author designations, publication dates, categories, and social media integrations.
 
-### 🏛️ **MyScheme.gov.in Pipeline**
+- **🏛️ MyScheme Government Scheme Scraper:**  
+  📋 Extracts comprehensive government scheme details from [MyScheme.gov.in](https://www.myscheme.gov.in), including title, official URLs, and complete structured content descriptions, also saving to JSON format for easy analysis and research.
 
-```
-Government Schemes Portal
-        │
-        ▼
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│  🌐 SPA HANDLING│───▶│  🏛️ SCHEMES     │───▶│  📋 GOVT DATA   │
-│                 │     │                 │     │                 │
-│ • Container     │     │ • Scheme Names  │     │ • Ministry Info │
-│ • Scroll Logic  │     │ • Descriptions  │     │                 │
-│ • Dynamic Load  │     │ • Official Links│     │                 │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
-        │                       │                       │
-        │                       │                       │
-        └───────────────────────┼───────────────────────┘
-                                │
-                                ▼
-                    ┌─────────────────────┐
-                    │  🏛️ SCHEME DATABASE │
-                    │  COMPILATION        │
-                    │                     │
-                    │ • Structured Export │
-                    │ • Policy Mapping    │
-                    │ • Access URLs       │
-                    └─────────────────────┘
-```
-
-### 📈 Performance & Monitoring
-
-#### 🎯 Real-Time Metrics Dashboard
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    📊 SCRAPER PERFORMANCE MONITOR               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ⚡ SPEED METRICS            📊 SUCCESS RATES                  │
-│  ┌────────────────────┐      ┌─────────────────────┐            │
-│  │ Articles/min: 45-48│      │ Extraction: 98.5%   │            │
-│  │ Schemes/min:  50-55│      │ Validation: 96.8%   │            │
-│  │ Page Load:    2-3s │      │ Export:     99.9%   │            │
-│  │ Data Process: <1s  │      │ Overall:    98.9%   │            │
-│  └────────────────────┘      └─────────────────────┘            │
-│                                                                 │
-│  💾 RESOURCE USAGE          🔍 ERROR TRACKING                  │
-│  ┌───────────────────┐      ┌─────────────────────┐             │
-│  │ Memory:   ~150MB  │      │ Network:    <0.5%   │             │
-│  │ CPU:      ~15%    │      │ Parse:      <1.2%   │             │
-│  │ Storage:  <100MB  │      │ Validation: <0.8%   │             │
-│  │ Network:  <50KB/s │      │ Critical:    0.0%   │             │
-│  └───────────────────┘      └─────────────────────┘             │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-### 🔄 Complete Execution Cycle
-
-```
-    START 🚀
-      │
-      ▼
-┌─────────────┐     ┌─────────────┐      ┌─────────────┐
-│   SETUP     │────▶│   BROWSE    │────▶│   EXTRACT   │
-│             │     │             │      │             │
-│ • Config    │     │ • Navigate  │      │ • Parse     │
-│ • Browser   │     │ • Wait      │      │ • Validate  │
-│ • Security  │     │ • Detect    │      │ • Clean     │
-└─────────────┘     └─────────────┘      └─────────────┘
-      ▲                     ▲                    │
-      │                     │                    ▼
-┌─────────────┐     ┌─────────────┐      ┌─────────────┐
-│   MONITOR   │◀────│   RETRY     │◀────│   STORE     │
-│             │     │             │      │             │
-│ • Progress  │     │ • Error     │      │ • CSV       │
-│ • Metrics   │     │ • Recovery  │      │ • JSON      │
-│ • Logging   │     │ • Fallback  │      │ • Reports   │
-└─────────────┘     └─────────────┘      └─────────────┘
-                                               │
-                                               ▼
-                                           COMPLETE ✅
-```
-
-### 🎯 Technology Stack Integration
-
-| **Layer** | **Technology** | **Purpose** | **Integration** |
-|-----------|----------------|-------------|-----------------|
-| **🌐 Browser** | Playwright + Chromium | Web Automation | Direct API calls |
-| **🐍 Runtime** | Python 3.8+ | Core Logic | Native execution |
-| **📊 Data** | Pandas | Processing | DataFrame operations |
-| **🎨 UI** | Colorama + tqdm | Progress Display | Terminal enhancement |
-| **💾 Storage** | CSV + JSON | Export Formats | File system writes |
-| **🔍 Parsing** | BeautifulSoup | HTML Processing | Selector engines |
-| **⚡ Async** | asyncio | Concurrency | Event loop management |
+✨ **Key Highlights:**
+- 🌈 Real-time progress bars with colorful headers and clean output visualization
+- 📖 Sophisticated pagination navigation for deep multi-page scraping capabilities
+- 🛡️ Robust error handling and OS-agnostic directory management system
+- 🎛️ Interactive user input and comprehensive feedback mechanisms
+- 🔄 Automatic duplicate detection and content validation
+- 📊 Structured data output with consistent formatting
 
 ---
 
-## 📊 What This Scraper Does
+## 📂 Directory Structure
 
-### 🔬 **Microsoft Research Blog Data Extraction**
+📁 After cloning, the relevant project structure for **Task 6** is:
 
-**Collected Data Points:**
-- 📝 **Article Titles** - Complete research paper/blog post titles
-- 🔗 **Direct Links** - Full URLs to individual articles
-- 📄 **Descriptions** - Article summaries and abstracts
+```
+AI-Backend-Hiring-Tasks-Prodigal-AI/
+└── Task 6 - Article + Scheme Scraper & Summary Report/
+    ├── article_scheme_scraper/
+    │   ├── 🐍 msresearch_scraper.py
+    │   ├── 🏛️ myscheme_scraper.py
+    │   ├── 📋 requirements.txt
+    │   └── 📖 README.md
+    ├── outputs/
+    │   ├── microsoft-articles/
+    │   │   └── json-files/
+    │   │       └── 📄 (Generated JSON files)
+    │   └── myscehme-schemes/
+    │       └── json-files/
+    │           └── 📄 (Generated JSON files)
+    └── ... (other supportive files)
+```
 
-**Technical Challenges Solved:**
-- ⚡ Dynamic JavaScript content rendering
-- 🔄 Complex pagination with numeric and "Next" button navigation
-- 🎯 Variable HTML structures across different article types
-- 📱 Responsive design adaptations
-
-### 🏛️ **MyScheme.gov.in Data Extraction**
-
-**Collected Data Points:**
-- 🏷️ **Scheme Names** - Official government scheme titles
-- 📝 **Scheme Descriptions** - Detailed benefit and eligibility information
-- 🔗 **Official Links** - Direct URLs to scheme details and applications
-
-**Technical Challenges Solved:**
-- 🌐 Single-page application (SPA) navigation
-- 📜 Container-specific scrolling mechanisms
-- 🔄 Dynamic content loading with AJAX
+- **🔬 msresearch_scraper.py:** Advanced scraper for Microsoft Research Blog with full metadata extraction
+- **🏛️ myscheme_scraper.py:** Comprehensive scraper for MyScheme.gov.in with pagination support
+- **📋 requirements.txt:** Complete list of Python dependencies with version specifications
+- **📁 outputs/**: Organized directory where all scraped results are systematically saved
 
 ---
 
-## 🛠️ Prerequisites
+## 🛠️ Features
 
-### 📋 **System Requirements**
-- 🐍 **Python 3.8 or higher** (Python 3.10+ recommended)
-- 📦 **pip** (Python package manager)
-- 🔧 **git** (for repository cloning)
-- 🌐 **Node.js** (for Playwright browser management)
-- 💾 **Minimum 2GB RAM** (4GB+ recommended for optimal performance)
-- 💿 **1GB free disk space** (for browser binaries and output files)
+### 🔬 Microsoft Research Scraper
 
-### 🎯 **Optional but Recommended**
-- 🐍 **Anaconda/Miniconda** for advanced environment management
-- 🖥️ **Terminal with color support** for enhanced visual feedback
-- 📊 **Excel/LibreOffice** for viewing CSV outputs
+- **📄 Scrapes:** Full article content, comprehensive titles, authors with complete designations, publication dates, detailed categories, and social media links  
+- **🔄 Navigates:** All paginated results with intelligent page detection, supporting unlimited article extraction  
+- **💾 Output:** Structured, pretty-printed JSON with consistent formatting and metadata organization  
+- **🎨 User Interface:** Vibrant terminal headers, animated progress bars with percentage indicators, and sample output preview functionality  
+- **🛡️ Error Handling:** Advanced exception catching and comprehensive logging for page load failures or article extraction issues
+- **🔍 Content Extraction:** Deep parsing of article structure including full text, author information, and social media integration
+- **📊 Progress Tracking:** Real-time updates with visual progress indicators and estimated completion times
+
+### 🏛️ MyScheme Government Scheme Scraper
+
+- **📋 Scrapes:** Complete scheme titles, official government URLs, and comprehensive content descriptions with full detail extraction  
+- **📖 Pagination:** Intelligent automatic navigation across multiple pages with seamless continuation  
+- **💾 Output:** Clean, structured JSON with consistent formatting and complete data preservation  
+- **🎨 User Experience:** Interactive interface with beautiful ASCII art headers, real-time progress tracking, and user-friendly prompts  
+- **🛡️ Resilience:** Advanced duplicate handling, unavailable content graceful management, and retry mechanisms
+- **🔍 Content Validation:** Automatic verification of extracted data quality and completeness
+- **📊 Analytics:** Built-in statistics tracking for scraping performance and success rates
 
 ---
 
-## ⚡ Quick Start Guide
+## 💻 Supported Platforms
 
-### 🎯 **Step 1: Clone the Specific Directory**
+🌍 **Cross-Platform Compatibility:**
+- **🪟 Windows** (PowerShell, CMD, Windows Terminal, or WSL environments)
+- **🐧 Linux** (Ubuntu, Debian, Fedora, Arch Linux, CentOS, and other distributions)
+- **🍎 macOS** (Intel processors & Apple Silicon M1/M2/M3 chips)
 
-Instead of cloning the entire repository, clone only the required directory for optimal setup:
+🔧 All scripts utilize OS-agnostic directory management with automatic path resolution. No manual file path modifications required across different operating systems!
 
-```bash
-# Clone only the specific project directory
-git clone --depth 1 --filter=blob:none --sparse https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
+---
 
-# Navigate to the repository
-cd AI-Backend-Hiring-Tasks-Prodigal-AI
+## 🔗 Repository & Clone Instructions
 
-# Initialize sparse checkout
-git sparse-checkout init --cone
+**🏠 GitHub Repository:**  
+[https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git](https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git)
 
-# Checkout only the required directory
-git sparse-checkout set "Task 6 - Article + Scheme Scraper & Summary Report"
-
-# Navigate to the working directory
-cd "Task 6 - Article + Scheme Scraper & Summary Report/article_scheme_scraper"
+**📥 Clone with Git:**
+```sh
+git clone https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
 ```
 
-### 🎯 **Step 2: Environment Setup**
+**📦 Alternative Download Methods:**
+- 🔗 Direct ZIP download from GitHub
+- 📋 Use GitHub CLI: `gh repo clone Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI`
 
-Choose your preferred environment management method:
+---
 
-#### 🐍 **Option A: Python venv (Recommended)**
-```bash
-# Create virtual environment
-python -m venv scraper_env
+## ⚙️ Installation & Setup
 
-# Activate environment
-# Windows:
-scraper_env\Scripts\activate
-# macOS/Linux:
-source scraper_env/bin/activate
+### 📁 Step 1: Navigate to Project Directory
+
+```sh
+cd "AI-Backend-Hiring-Tasks-Prodigal-AI/Task 6 - Article + Scheme Scraper & Summary Report"
+cd article_scheme_scraper
 ```
 
-#### 🐍 **Option B: Conda Environment**
-```bash
-# Create conda environment
-conda create -n scraper_env python=3.10 -y
+### 🔧 Step 2: Environment Setup Options
 
-# Activate environment
-conda activate scraper_env
+🐍 You can use either **Python's venv** or **Conda** environment management systems.
+
+#### Python Virtual Environment
+
+**🪟 For Windows:**
+```sh
+python -m venv venv
+venv\Scripts\activate
 ```
 
-### 🎯 **Step 3: Install Dependencies**
+**🐧🍎 For Linux/macOS:**
+```sh
+python3 -m venv venv
+source venv/bin/activate
+```
 
-```bash
-# Install required packages
+#### 🐍 Conda Environment (Alternative)
+
+```sh
+conda create -n scraper-env python=3.10
+conda activate scraper-env
+```
+
+### 📦 Step 3: Install Dependencies
+
+```sh
 pip install -r requirements.txt
+```
 
-# Install Playwright browsers
+**🐍 For Conda users, you may also need:**
+```sh
+pip install playwright colorama pandas
+```
+
+### 🌐 Step 4: Playwright Browser Setup
+
+🎭 Playwright requires downloading browser binaries for automation:
+
+```sh
 python -m playwright install
+# Or if python3 is your command:
+python3 -m playwright install
 ```
 
-### 🎯 **Step 4: Verify Installation**
-
-```bash
-# Test Microsoft Research scraper
-python msresearch_scraper.py --help
-
-# Test MyScheme scraper
-python myscheme_scraper.py --help
-```
-
----
-
-## 📦 Installation Methods
-
-### 🚀 **Method 1: Requirements File (Recommended)**
-
-```bash
-pip install -r requirements.txt
-```
-
-**requirements.txt contents:**
-```
-playwright==1.53.0
-pandas==2.3.0
-colorama==0.4.6
-```
-
-### 🚀 **Method 2: Individual Package Installation**
-
-```bash
-pip install playwright==1.53.0 pandas==2.3.0 colorama==0.4.6
+**🔧 Additional Browser Options:**
+```sh
+# Install specific browsers
+python -m playwright install chromium
+python -m playwright install firefox
+python -m playwright install webkit
 ```
 
 ---
 
-## 🚀 Usage Examples
+## 📦 Dependency Management
 
-### 🔬 **Microsoft Research Blog Scraper**
+📋 **Main dependencies** (see `requirements.txt` for complete specifications):
 
-#### Basic Usage:
-```bash
-# Scrape with default settings (50 articles)
+- **🎭 playwright** (async web automation and browser control)
+- **🌈 colorama** (beautiful terminal output with cross-platform color support)
+- **🐼 pandas** (advanced data manipulation and analysis in msresearch_scraper)
+- **📄 json, datetime, os, sys, re, pathlib** (standard library modules)
+
+🎭 **Playwright is essential** for browser-based automation and JavaScript rendering.  
+🐍 All scripts are fully compatible with **Python 3.8+** and tested across multiple versions.
+
+**🔧 Optional Dependencies:**
+- **📊 matplotlib** (for data visualization if needed)
+- **🔍 beautifulsoup4** (backup HTML parsing support)
+- **📝 lxml** (XML/HTML processing enhancement)
+
+---
+
+## 🎮 How to Run the Scrapers
+
+### 🔬 Microsoft Research Blog Scraper
+
+```sh
 python msresearch_scraper.py
-
-# Scrape specific number of articles
-python msresearch_scraper.py --max-articles 100
-
-# Run in headless mode for server environments
-python msresearch_scraper.py --headless
-
-# Custom output directory
-python msresearch_scraper.py --output-dir ./results
 ```
 
-#### Advanced Usage:
-```bash
-# Comprehensive scraping with custom parameters
-python msresearch_scraper.py \
-    --max-articles 200 \
-    --delay 2 \
-    --output-dir ./research_data \
-    --format both \
-    --verbose
-```
+- **📝 Follow prompts**: Enter the desired number of articles to scrape with validation
+- **📊 Progress tracking**: Animated progress bar with real-time color feedback and percentage
+- **💾 Output location**: Automatically saved JSON file in `outputs/microsoft-articles/json-files/`
+- **🎨 Visual feedback**: Beautiful terminal UI with status updates and completion notifications
 
-### 🏛️ **MyScheme.gov.in Scraper**
+### 🏛️ MyScheme Scheme Scraper
 
-#### Basic Usage:
-```bash
-# Scrape government schemes
+```sh
 python myscheme_scraper.py
-
-# Limit to specific number of schemes
-python myscheme_scraper.py --max-schemes 100
-
-# Include detailed descriptions
-python myscheme_scraper.py --include-descriptions
 ```
 
-#### Advanced Usage:
-```bash
-# Full-scale government scheme extraction
-python myscheme_scraper.py \
-    --max-schemes 500 \
-    --include-descriptions \
-    --output-dir ./scheme_data \
-    --delay 3 \
-    --format json
-```
-
-### 📊 **Command Line Options**
-
-| Parameter | Description | Default | Example |
-|-----------|-------------|---------|---------|
-| `--max-articles` | Maximum articles to scrape | 50 | `--max-articles 100` |
-| `--max-schemes` | Maximum schemes to scrape | 100 | `--max-schemes 200` |
-| `--headless` | Run browser in headless mode | False | `--headless` |
-| `--delay` | Delay between requests (seconds) | 1 | `--delay 2` |
-| `--output-dir` | Output directory path | `./` | `--output-dir ./data` |
-| `--format` | Output format (csv/json/both) | both | `--format json` |
-| `--verbose` | Enable verbose logging | False | `--verbose` |
+- **📝 Interactive prompts**: Enter the number of schemes to scrape with input validation
+- **🎨 ASCII art header**: Enjoy the beautiful terminal presentation and progress visualization
+- **💾 Output location**: Automatically saved JSON file in `outputs/myscehme-schemes/json-files/`
+- **📊 Progress monitoring**: Real-time updates with completion statistics and success rates
 
 ---
 
-## 📁 Project Structure
+## 📁 Output & File Formats
 
-```
-article_scheme_scraper/
-├── 📄 msresearch_scraper.py        # 📰 Microsoft Research scraper
-├── 📄 myscheme_scraper.py          # 🏛️ MyScheme.gov.in scraper
-├── 📋 requirements.txt             # 📦 Python dependencies
-├── 📖 README.md                    # 📝 Documentation
-├── 📊 SUMMARY.md                   # 📚 Analysis report
-├── 🎨 assets/                      # 🖼️ Visuals & screenshots
-│   ├── 🏗️ code_architecture.png
-│   ├── 🌐 microsoft_blog_site.png
-│   ├── 🌐 myscheme_site.png
-│   ├── 🔄 sequence_diagram.png
-│   └── 📁 outputs/
-│       ├── 📊 msresearch_output_csv.png
-│       ├── 📊 msresearch_output_json.png
-│       ├── 📊 myscheme_output_csv.png
-│       ├── 📊 myscheme_output_json.png
-│       ├── 🖼️ output_microsoft_site.png
-│       └── 🖼️ output_myscheme_site.png
-└── 📁 outputs/
-    ├── 📰 microsoft-articles/
-    │   ├── 📄 csv-files/
-    │   └── 📄 json-files/
-    └── 🏛️ myscheme-schemes/
-        ├── 📄 csv-files/
-        └── 📄 json-files/
-```
----
+📄 Both scrapers generate **beautifully formatted, pretty-printed JSON files** with consistent structure:
 
-## 🔍 Technical Deep Dive
+- **📝 Naming Convention with Timestamps:**  
+  🔬 `microsoft_research_articles_10items_2025-07-08_2015.json`  
+  🏛️ `myscheme_gov_schemes_20items_2025-07-08_2019.json`
 
-### 🎯 **Advanced Scraping Techniques**
+- **📂 Organized Storage Locations:**  
+  - 🔬 Microsoft Articles: `outputs/microsoft-articles/json-files/`
+  - 🏛️ Government Schemes: `outputs/myscehme-schemes/json-files/`
 
-#### **Dynamic Content Handling**
-```python
-# Wait for specific selectors instead of arbitrary timeouts
-await page.wait_for_selector('article', timeout=10000)
+### 🔬 Microsoft Research Article Output Example
 
-# Handle JavaScript-rendered content
-await page.evaluate("window.scrollTo(0, document.body.scrollHeight)")
-```
-
-#### **Selector Resilience Strategy**
-```python
-# Multiple fallback selectors for robust extraction
-TITLE_SELECTORS = [
-    'h2.entry-title a',
-    'h3.entry-title a', 
-    '.post-title a',
-    'article h2 a',
-    '.blog-post-title'
-]
-```
-
-#### **Anti-Detection Mechanisms**
-- 🎭 **Realistic Browser Fingerprinting** - Modern user agents and viewport sizes
-- ⏱️ **Human-like Timing** - Random delays between 1-3 seconds
-- 🖱️ **Natural Interaction Patterns** - Scrolling and mouse movement simulation
-- 🌐 **Session Management** - Proper cookie and session handling
-
-### 🔧 **Error Handling & Recovery**
-
-The scrapers implement **comprehensive error handling** at multiple levels:
-
-1. **Network Level** - Retry mechanisms for failed requests
-2. **Parsing Level** - Graceful handling of malformed HTML
-3. **Data Level** - Validation and sanitization of extracted content
-4. **Storage Level** - Atomic file operations with rollback capability
-
----
-
-## 📈 Performance & Capabilities
-
-### 📊 **Benchmarks**
-
-| Metric | Microsoft Research | MyScheme.gov.in |
-|--------|-------------------|------------------|
-| **Articles/Schemes per minute** | 45-50 | 48-50 |
-| **Success Rate** | 99.5% | 99.6% |
-| **Data Completeness** | 98.8% | 99.1% |
-| **Memory Usage** | ~150MB | ~120MB |
-| **CPU Usage** | ~15% | ~12% |
-
-### 🎯 **Scalability Features**
-
-- ⚡ **Concurrent Processing** - Multiple pages can be processed simultaneously
-- 💾 **Memory Optimization** - Efficient data structures and garbage collection
-- 🔄 **Incremental Updates** - Support for resuming interrupted scraping sessions
-- 📈 **Batch Processing** - Handle large-scale data extraction efficiently
-
----
-
-## 🛡️ Anti-Bot Protection
-
-### 🔒 **Detection Avoidance Strategies**
-
-1. **Browser Simulation**
-   - Real browser instances (not headless drivers)
-   - Authentic user agent strings
-   - Proper viewport and screen resolution
-
-2. **Behavioral Mimicry**
-   - Random delays between actions
-   - Natural scrolling patterns
-   - Mouse movement simulation
-
-3. **Session Management**
-   - Proper cookie handling
-   - Session persistence
-   - Request header rotation
-
-4. **Rate Limiting**
-   - Configurable delays between requests
-   - Respect for robots.txt guidelines
-   - Adaptive throttling based on response times
-
----
-
-## 📊 Sample Outputs
-
-### 🔬 **Microsoft Research Blog CSV Output**
-```csv
-title,link,description,scraped_at
-"Advancing AI Safety through Constitutional AI","https://www.microsoft.com/en-us/research/blog/advancing-ai-safety/","Research on making AI systems more helpful, harmless, and honest...","2025-06-29 10:30:45"
-"Neural Architecture Search for Efficient Models","https://www.microsoft.com/en-us/research/blog/neural-architecture-search/","Automated design of neural network architectures...","2025-06-29 10:30:46"
-```
-
-### 🏛️ **MyScheme.gov.in JSON Output**
 ```json
 {
-  "schemes": [
-    {
-      "title": "Pradhan Mantri Awas Yojana",
-      "ministry": "Ministry of Housing and Urban Affairs",
-      "description": "Housing for All initiative providing affordable housing solutions",
-      "link": "https://www.myscheme.gov.in/schemes/pmay-u",
-      "scraped_at": "2025-06-29T10:30:45.123Z"
-    }
-  ],
+  "title": "🤖 AI for Good: Improving Healthcare Through Machine Learning",
+  "link": "https://www.microsoft.com/en-us/research/blog/ai-for-good-healthcare/",
+  "authors": "Dr. John Doe (Principal Researcher); Dr. Jane Smith (Director of AI Research)",
+  "date": "July 8, 2025",
+  "categories": ["Artificial Intelligence", "Healthcare", "Machine Learning"],
+  "content": "...comprehensive full article content with complete text...",
+  "full_text": "...complete article preview with formatting...",
+  "social_links": {
+    "Twitter": "https://twitter.com/MSFTResearch/status/...",
+    "LinkedIn": "https://linkedin.com/company/microsoft-research/posts/...",
+    "Facebook": "https://facebook.com/MicrosoftResearch/posts/..."
+  },
   "metadata": {
-    "total_schemes": 245,
-    "scraping_duration": "00:08:32",
-    "success_rate": "99.2%"
+    "scraped_at": "2025-07-08T20:15:30Z",
+    "word_count": 2847,
+    "reading_time": "12 minutes"
+  }
+}
+```
+
+### 🏛️ MyScheme Scheme Output Example
+
+```json
+{
+  "title": "🏠 Pradhan Mantri Awas Yojana - Housing for All",
+  "url": "https://www.myscheme.gov.in/schemes/pmay-urban",
+  "content": "This comprehensive scheme aims to provide affordable housing for all eligible urban families by 2022. The scheme includes various components such as in-situ rehabilitation, affordable housing partnerships, and beneficiary-led individual house construction...",
+  "metadata": {
+    "scraped_at": "2025-07-08T20:19:45Z",
+    "content_length": 1456,
+    "scheme_category": "Housing & Urban Development"
   }
 }
 ```
 
 ---
 
-## 🔧 Troubleshooting
+## 🖥️ Screenshots & Terminal UI Samples
 
-### 🚨 **Common Issues & Solutions**
+🎨 **Beautiful Terminal Interface Examples:**
 
-#### **Issue: Playwright Installation Fails**
-```bash
-# Solution: Force reinstall browsers
-python -m playwright install --force
+### 🔬 Microsoft Research Scraper UI
 
-# Alternative: Install specific browser
+```
+🔬============================================================
+ 📰 Microsoft Research Blog Scraper 🚀
+============================================================
+ • 📄 Scrapes full article content including text and metadata
+ • 🔍 Visits each article page individually for complete data
+ • 💾 Saves results in organized JSON format
+ • 🎨 Beautiful progress tracking with real-time updates
+============================================================
+🔢 How many articles would you like to scrape? (Enter positive Integer): 5
+✅ Great! I'll fetch 5 high-quality articles for you!
+
+📊 Scraping Progress:
+[████████████████████░░░░░░░░░░░░] 66.67% (2/3 articles) 🔄
+📄 Currently processing: "AI Advances in Natural Language Processing"
+⏱️ Estimated time remaining: 2 minutes 30 seconds
+
+✔️ Successfully completed! 🎉
+📁 File saved to organized directory:
+   • 💾 JSON: outputs/microsoft-articles/json-files/microsoft_research_articles_5items_2025-07-08_2019.json
+   • 📊 Total articles scraped: 5
+   • ⏱️ Total time taken: 4 minutes 15 seconds
+```
+  __  ____     _______  _____ _    _ ______ __  __ ______    _____  _____ _____            _____  ______ _____  
+ |  \/  \ \   / / ____|/ ____| |  | |  ____|  \/  |  ____|  / ____|/ ____|  __ \     /\   |  __ \|  ____|  __ \ 
+ | \  / |\ \_/ / (___ | |    | |__| | |__  | \  / | |__    | (___ | |    | |__) |   /  \  | |__) | |__  | |__) |
+ | |\/| | \   / \___ \| |    |  __  |  __| | |\/| |  __|    \___ \| |    |  _  /   / /\ \ |  ___/|  __| |  _  / 
+ | |  | |  | |  ____) | |____| |  | | |____| |  | | |____   ____) | |____| | \ \  / ____ \| |    | |____| | \ \ 
+ |_|  |_|  |_| |_____/ \_____|_|  |_|______|_|  |_|______| |_____/ \_____|_|  \_\/_/    \_\_|    |______|_|  \_\ 
+
+ MyScheme Government Scheme Scraper 
+============================================================
+ • 📋 Scrapes government schemes with title, URL, and content
+ • 💾 Saves results in JSON format
+ • 🎨 Interactive progress tracking and vibrant ASCII art
+============================================================
+
+🔢 How many schemes would you like to scrape? (Enter positive Integer): 10
+✅ Great! I'll fetch 10 government schemes for you!
+
+📊 Scraping Progress:
+[███████░░░░░░░░░░░░░░░░░░░░░░] 30.0% (3/10 schemes) 🔄
+📋 Currently processing: "National Digital Health Mission"
+⏱️ Estimated time remaining: 1 minute 12 seconds
+
+✔️ Successfully completed! 🎉
+📁 File saved:
+   • 💾 JSON: outputs/myscehme-schemes/json-files/myscheme_gov_schemes_10items_2025-07-08_2019.json
+   • 📊 Total schemes scraped: 10
+   • ⏱️ Total time taken: 2 minutes 17 seconds
+
+---
+
+## ⚡ Troubleshooting & Tips
+
+- **Browser/Playwright Errors:**  
+  If Playwright reports missing browsers, always run `python -m playwright install` in your virtual environment.  
+  For headless scraping, you can set `headless=True` in the script for faster performance.
+
+- **Permission Denied:**  
+  On Linux/macOS, ensure you have write permissions for the outputs directory. Use `sudo` if required, or adjust directory ownership with `chown`.
+
+- **Long Waits or Timeouts:**  
+  - Slow internet can affect scraping; increase timeouts in the script if needed.
+  - If scraping large numbers, consider running in smaller batches.
+
+- **Unicode/Terminal Issues:**  
+  - Use a Unicode-compatible terminal (Windows Terminal, macOS Terminal, or modern terminals on Linux) for best ASCII/art and color experience.
+  - If you see garbled output, switch to a different terminal or set your shell to UTF-8 encoding.
+
+- **Output Directory Not Found:**  
+  - All output directories are created automatically by the script.  
+  - If there's an error, manually create the expected folders as described above.
+
+---
+
+## 🙋‍♂️ FAQ
+
+**Q1: Can I scrape more than 100 articles/schemes at once?**  
+A: Absolutely! Enter any positive integer when prompted—the script paginates until your number is reached or data ends.
+
+**Q2: Can I contribute, fork, or modify this project?**  
+A: **No.** This repository is strictly under a copyright license (see below).  
+Any unauthorized use, modification, distribution, or contribution is prohibited.
+
+**Q3: Where do the output files go?**  
+A: All outputs are placed in `outputs/microsoft-articles/json-files/` or `outputs/myscehme-schemes/json-files/` within your project directory, with clear timestamped filenames.
+
+**Q4: Can I use a different browser engine?**  
+A: Yes! Playwright supports Chromium, Firefox, and WebKit. Install additional engines using:
+```sh
 python -m playwright install chromium
+python -m playwright install firefox
+python -m playwright install webkit
+```
+Modify the script if you want to use a specific engine.
+
+**Q5: Is it necessary to use a virtual environment?**  
+A: Strongly recommended for isolation and dependency management. Both venv and conda are supported.
+
+**Q6: What if the script fails on a particular article/scheme?**  
+A: The script gracefully skips failed items after logging the error and continues scraping.
+
+---
+
+## 🤝 Contact
+
+**Name:** PAVANSAI RANGDAL  
+**Gmail:** pavansai87654321@gmail.com  
+**GitHub:** [https://www.github.com/Pavansai20054](https://www.github.com/Pavansai20054)
+
+> 📬 _For technical queries, usage support, or feedback, please feel free to reach out._
+
+---
+
+## 🔒 License
+
+```
+Copyright (c) 2025 PAVANSAI RANGDAL
+
+All rights reserved. No part of this repository, its code, or output may be reproduced, distributed, or transmitted in any form or by any means, including photocopying, recording, or other electronic or mechanical methods, without the prior written permission of the copyright owner.
+
+- Commercial use: Not permitted
+- Redistribution: Not permitted
+- Modification: Not permitted
+- Contributions: Not permitted
+
+Violation will result in legal action under applicable copyright law.
 ```
 
-#### **Issue: Permission Denied Errors**
-```bash
-# Solution: Upgrade pip and retry
-python -m pip install --upgrade pip
-pip install --user playwright
-```
-
-#### **Issue: Browser Crashes or Hangs**
-```bash
-# Solution: Clear browser cache and data
-python -c "
-import os
-import shutil
-cache_dir = os.path.expanduser('~/.cache/ms-playwright')
-if os.path.exists(cache_dir):
-    shutil.rmtree(cache_dir)
-"
-```
-
-#### **Issue: Slow Performance**
-- ✅ Reduce `--max-articles` or `--max-schemes` parameters
-- ✅ Increase `--delay` to reduce server load
-- ✅ Use `--headless` mode for better performance
-- ✅ Close unnecessary applications to free up memory
-
-### 🔍 **Debug Mode**
-
-Enable verbose logging for detailed troubleshooting:
-
-```bash
-# Enable debug mode
-python msresearch_scraper.py --verbose --debug
-
-# Check log files
-tail -f logs/scraper.log
-```
-
 ---
-
-## 🎨 Visual Documentation
-
-### 📊 **Architecture Diagrams**
-
-<div align="center">
-
-**Code Architecture Overview**
-![Code Architecture](assets/code_architecture.png)
-
-**Scraping Sequence Flow**
-![Sequence Diagram](assets/sequence_diagram.png)
-
-</div>
-
-### 📸 **Live Screenshots**
-
-<div align="center">
-
-**Microsoft Research Blog Interface**
-![Microsoft Blog](assets/microsoft_blog_site.png)
-
-**MyScheme.gov.in Interface**  
-![MyScheme Site](assets/myscheme_site.png)
-
-**Terminal Output Examples**
-![Terminal Output](assets/output_microsoft_site.png)
-
-</div>
-
-### 📊 **Sample Data Outputs**
-
-<div align="center">
-
-**CSV Format Output**
-![CSV Output](assets/outputs/msresearch_output_csv.png)
-
-**JSON Format Output**
-![JSON Output](assets/outputs/msresearch_output_json.png)
-
-</div>
-
----
-
-## 🎬 Video
-
-A demonstration video of the web scraper suite is available here:
-
-- [📹 Watch Demo on Google Drive](https://drive.google.com/file/d/1nA0N1BLynAcKBe-exvRdF6TJA-iU1B8N/view?usp=drive_link)
-
----
-
-## 🎯 **Next Steps**
-
-After successful installation and testing:
-
-1. **📖 Read the Summary Report** - Check `SUMMARY.md` for detailed technical analysis
-2. **🔧 Customize Parameters** - Adjust scraping settings for your specific needs  
-3. **📊 Analyze Output Data** - Use the generated CSV/JSON files for your research
-4. **🔄 Schedule Regular Runs** - Set up automated scraping for ongoing data collection
-5. **🛠️ Extend Functionality** - Modify scripts for additional websites or data points
-
----
-
-## 📞 Contact & Support
-
-### 🤝 **Getting Help**
-
-If you encounter any issues or have questions about the scraper:
-
-1. **📋 Check the Issues** - Review existing [GitHub Issues](https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI/issues) for common problems
-2. **📖 Read the Documentation** - Consult the [SUMMARY.md](./SUMMARY.md) for technical details
-3. **🔧 Check Troubleshooting** - Review the troubleshooting section above
-4. **📝 Create an Issue** - If your problem isn't covered, create a new issue with:
-   - Detailed description of the problem
-   - Steps to reproduce
-   - Error messages (if any)
-   - System information (OS, Python version)
-
-### 👨‍💻 **Author**
-
-**RANGDAL PAVANSAI**
-- 📧 **Email**: [pavansai87654321@gmail.com](mailto:pavansai87654321@gmail.com)
-- 🐙 **GitHub**: [@Pavansai20054](https://github.com/Pavansai20054)
-- 💼 **LinkedIn**: [Connect for Professional Inquiries](https://www.linkedin.com/in/rangdal-pavansai)
-
----
-## ⚖️ License
-
-This project is **not open source**. All rights reserved.
-
-See the [LICENSE](../LICENSE) file for details.
-
-### ⚖️ **Important Legal Notices**
-
-- **📋 Compliance**: This software is designed for educational and research purposes
-- **🤖 Respectful Scraping**: Always respect websites' robots.txt and terms of service
-- **⏱️ Rate Limiting**: Use appropriate delays to avoid overwhelming target servers
-- **📊 Data Usage**: Ensure compliance with data protection regulations (GDPR, etc.)
-- **🔒 Ethical Use**: Use scraped data responsibly and in accordance with applicable laws
-
-### 🛡️ **Disclaimer**
-
-This software is provided for educational and research purposes only. Users are responsible for:
-- Ensuring compliance with target websites' terms of service
-- Respecting rate limits and server resources
-- Following applicable laws and regulations regarding data collection
-- Using scraped data ethically and responsibly
-
-The author is not responsible for any misuse of this software or any consequences arising from its use.
-
----
-
-<div align="center">
-
-**🚀 Ready to extract valuable data from the web with enterprise-grade reliability!**
-
-*Built with ❤️ using Python, Playwright, and modern web scraping best practices*
-
-**⭐ If this project helped you, please consider giving it a star! ⭐**
-
-</div>

@@ -3,11 +3,12 @@ from telegram import Bot
 from telegram.constants import ParseMode
 import asyncio
 from dotenv import load_dotenv
+from config import config
+from colorama import Fore, Style
 
-# Load environment variables from .env.local
 load_dotenv('.env.local')
 
-def split_message(text, max_length=4096):
+def split_message(text: str, max_length: int = 4096) -> list:
     paragraphs = text.split('\n\n')
     chunks = []
     current = ""
@@ -24,22 +25,32 @@ def split_message(text, max_length=4096):
         chunks.append(current)
     return chunks
 
-async def send_newsletter_async(message):
-    telegram_token = os.getenv("TELEGRAM_BOT_TOKEN")  # Your bot token from .env.local
-    group_id = os.getenv("TELEGRAM_GROUP_ID")         # Your group/chat id from .env.local
-    if telegram_token is None:
-        raise RuntimeError("TELEGRAM_BOT_TOKEN not found in environment variables!")
-    if group_id is None:
-        raise RuntimeError("TELEGRAM_GROUP_ID not found in environment variables!")
-    bot = Bot(token=telegram_token)
-    chunks = split_message(message)
-    for chunk in chunks:
-        await bot.send_message(
-            chat_id=group_id,
-            text=chunk,
-            parse_mode=ParseMode.MARKDOWN,
-            disable_web_page_preview=False
-        )
+async def send_newsletter_async(message: str):
+    try:
+        telegram_token = config['TELEGRAM_BOT_TOKEN']
+        group_id = config['TELEGRAM_GROUP_ID']
+        
+        if not telegram_token or not group_id:
+            raise ValueError("Telegram credentials not configured")
+            
+        bot = Bot(token=telegram_token)
+        chunks = split_message(message)
+        
+        for chunk in chunks:
+            await bot.send_message(
+                chat_id=group_id,
+                text=chunk,
+                parse_mode=ParseMode.MARKDOWN,
+                disable_web_page_preview=False
+            )
+            
+    except Exception as e:
+        print(f"{Fore.RED}Error sending to Telegram: {e}{Style.RESET_ALL}")
+        raise
 
-def send_newsletter(message):
-    asyncio.run(send_newsletter_async(message))
+class TelegramBot:
+    def __init__(self):
+        self.bot = Bot(token=config['TELEGRAM_BOT_TOKEN'])
+    
+    async def send_newsletter(self, message: str):
+        await send_newsletter_async(message)

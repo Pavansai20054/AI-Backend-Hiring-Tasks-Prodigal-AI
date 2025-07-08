@@ -250,8 +250,9 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository**
    ```bash
-   git clone <repository-url>
-   cd rbac-system
+   git clone https://github.com/Pavansai20054/AI-Backend-Hiring-Tasks-Prodigal-AI.git
+   
+   cd "AI-Backend-Hiring-Tasks-Prodigal-AI/Task 2 - Role-Based Access Control System"
    ```
 
 2. **Set up the backend**

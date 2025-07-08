@@ -21,7 +21,6 @@ Task 5 - Binance WebSocket Price Precision/binance-websocket-ticker/influxdata.c
 # gitignore files
 Task 2 - Role-Based Access Control System/frontend/.gitignore
 
-
 # node_modules
 Task 2 - Role-Based Access Control System/frontend/node_modules/
 
@@ -36,7 +35,6 @@ Task 1 - ML + LLM Pipeline Orchestration/data/*
 # General Python ignores
 __pycache__/
 
-
 # Docker/Compose env files
 .env
 .env.*
@@ -44,6 +42,16 @@ __pycache__/
 # Logs
 *.log
 
+# todo files
+**/todo.md
+
 # Output folders
 output/
 outputs/
+
+# Task 7 - Multi-Agent Newsletter Generator: Ignore all files in chroma_db and markdown_files but keep the folders
+Task 7 - Multi-Agent Newsletter Generator/chroma_db/*
+!Task 7 - Multi-Agent Newsletter Generator/chroma_db/.gitkeep
+
+Task 7 - Multi-Agent Newsletter Generator/markdown_files/*
+!Task 7 - Multi-Agent Newsletter Generator/markdown_files/.gitkeep

@@ -42,24 +42,6 @@ The purpose is to document difficulties (especially around page structure, anti-
   <sub>microsoft_blog_site.png</sub>
 </p>
 
-<p align="center">
-  <img src="assets/output_microsoft_site.png" alt="Output from Microsoft Blog Scraper" width="500"/>
-  <br>
-  <sub>output_microsoft_site.png</sub>
-</p>
-
-<p align="center">
-  <img src="assets/msresearch_output_csv.png" alt="Microsoft Research Output CSV" width="500"/>
-  <br>
-  <sub>msresearch_output_csv.png</sub>
-</p>
-
-<p align="center">
-  <img src="assets/msresearch_output_json.png" alt="Microsoft Research Output JSON" width="500"/>
-  <br>
-  <sub>msresearch_output_json.png</sub>
-</p>
-
 ### 1.2 MyScheme.gov.in
 
 - **Single-Page Application (SPA):**  
@@ -81,24 +63,6 @@ The purpose is to document difficulties (especially around page structure, anti-
   <img src="assets/myscheme_site.png" alt="MyScheme.gov.in Site" width="500"/>
   <br>
   <sub>myscheme_site.png</sub>
-</p>
-
-<p align="center">
-  <img src="assets/output_myscheme_site.png" alt="Output from MyScheme Scraper" width="500"/>
-  <br>
-  <sub>output_myscheme_site.png</sub>
-</p>
-
-<p align="center">
-  <img src="assets/myscheme_output_csv.png" alt="MyScheme Output CSV" width="500"/>
-  <br>
-  <sub>myscheme_output_csv.png</sub>
-</p>
-
-<p align="center">
-  <img src="assets/myscheme_output_json.png" alt="MyScheme Output JSON" width="500"/>
-  <br>
-  <sub>myscheme_output_json.png</sub>
 </p>
 
 ---
@@ -196,12 +160,6 @@ The purpose is to document difficulties (especially around page structure, anti-
 - **Scrolling:** Targeted the real scroll container, not just the browser window.
 - **Progress Bar:** Used colorama for clear, colorful feedback.
 - **File Output:** CSV and JSON, with contextual, timestamped filenames.
-
-<p align="center">
-  <img src="assets/code_archicture.png" alt="Code Architecture" width="500"/>
-  <br>
-  <sub>code_archicture.png</sub>
-</p>
 
 <p align="center">
   <img src="assets/sequence_diagram.png" alt="Sequence Diagram" width="500"/>
