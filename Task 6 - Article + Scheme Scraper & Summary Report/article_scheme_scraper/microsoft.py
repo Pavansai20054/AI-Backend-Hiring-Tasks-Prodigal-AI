@@ -15,25 +15,21 @@ def clear_console():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 def print_header():
-    """Print colorful header"""
     clear_console()
-    print(Fore.CYAN + r"""
-[38;5;196m╔╦╗[38;5;226m╦[38;5;39m╔═╗[38;5;196m╦═╗[38;5;40m╔═╗[38;5;226m╔═╗[38;5;196m╔═╗[38;5;40m╔═╗[38;5;226m╔╦╗  [38;5;196m╦═╗[38;5;40m╔═╗[38;5;226m╔═╗[38;5;39m╔═╗[38;5;196m╔═╗[38;5;40m╦═╗[38;5;226m╔═╗[38;5;39m╦ ╦  [38;5;196m╔╗ ╦  [38;5;40m╔═╗[38;5;226m╔═╗  [38;5;196m╔═╗[38;5;40m╔═╗[38;5;226m╦═╗[38;5;39m╔═╗[38;5;196m╔═╗[38;5;40m╔═╗[38;5;226m╦═╗
-[38;5;196m║║║[38;5;226m║║  [38;5;39m╠╦╝[38;5;196m║ ║[38;5;40m╚═╗[38;5;226m║ ║[38;5;196m╠╣  [38;5;40m║   [38;5;226m╠╦╝[38;5;39m║╣ [38;5;196m╚═╗[38;5;40m║╣ [38;5;226m╠═╣[38;5;39m╠╦╝[38;5;196m║  [38;5;40m╠═╣  [38;5;226m╠╩╗[38;5;39m║  [38;5;196m║ ║[38;5;40m║ ╦  [38;5;226m╚═╗[38;5;39m║  [38;5;196m╠╦╝[38;5;40m╠═╣[38;5;226m╠═╝[38;5;39m║╣ [38;5;196m╠╦╝
-[38;5;196m╩ ╩[38;5;226m╩╚═╝[38;5;39m╩╚═[38;5;196m╚═╝[38;5;40m╚═╝[38;5;226m╚═╝[38;5;196m╚   [38;5;40m╩   [38;5;226m╩╚═[38;5;39m╚═╝[38;5;196m╚═╝[38;5;40m╚═╝[38;5;226m╩ ╩[38;5;39m╩╚═[38;5;196m╚═╝[38;5;40m╩ ╩  [38;5;226m╚═╝[38;5;39m╩═╝[38;5;196m╚═╝[38;5;40m╚═╝  [38;5;226m╚═╝[38;5;39m╚═╝[38;5;196m╩╚═[38;5;40m╩ ╩[38;5;226m╩  [38;5;39m╚═╝[38;5;196m╩╚═
-    """)
+    print(Fore.CYAN + r"""[Microsoft Research Blog Scraper Header]""")
     print(Fore.YELLOW + " Microsoft Research Blog Scraper " + Style.RESET_ALL)
     print(Fore.GREEN + "="*60 + Style.RESET_ALL)
-    print(Fore.MAGENTA + " • Scrapes articles with title, link, and description")
-    print(Fore.MAGENTA + " • Saves results in CSV and JSON formats")
-    print(Fore.MAGENTA + " • Interactive progress tracking")
+    print(Fore.MAGENTA + " • Scrapes full article content including text and metadata")
+    print(Fore.MAGENTA + " • Visits each article page individually for complete data")
+    print(Fore.MAGENTA + " • Saves results in JSON format")
     print(Fore.GREEN + "="*60 + Style.RESET_ALL)
 
-def create_output_directory():
-    # Set this to your real, existing folder
-    json_dir = r"A:\Internships\AI-Backend-Hiring-Tasks-Prodigal-AI\Task 6 - Article + Scheme Scraper & Summary Report\outputs\microsoft-articles\json-files"
+def create_output_directories():
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    outputs_dir = os.path.join(script_dir, "outputs", "microsoft-articles")
+    json_dir = os.path.join(outputs_dir, "json-files")
     os.makedirs(json_dir, exist_ok=True)
-    print(Fore.CYAN + "✔ Output directory created/verified:" + Style.RESET_ALL)
+    print(Fore.CYAN + "✔ Output directories created/verified:" + Style.RESET_ALL)
     print(Fore.WHITE + "   • JSON: " + Fore.GREEN + f"{json_dir}" + Style.RESET_ALL)
     return json_dir
 
@@ -167,6 +163,7 @@ async def scrape_article_page(context, article_url):
                 a_tag = await item.query_selector('a')
                 if a_tag:
                     url = await a_tag.get_attribute('href')
+                    # Try to get name from SVG aria-label or from data-bi-cn or from title or fallback to URL
                     label = await a_tag.get_attribute('title') or await a_tag.get_attribute('aria-label') or await a_tag.get_attribute('data-bi-cn')
                     if not label:
                         # Guess platform from url
@@ -201,7 +198,7 @@ async def scrape_article_page(context, article_url):
 
 async def scrape_msresearch():
     print_header()
-    json_dir = create_output_directory()
+    json_dir = create_output_directories()
     while True:
         try:
             num_articles = int(input(Fore.BLUE + "\n🔢 How many articles would you like to scrape? (Enter positive Integer): " + Style.RESET_ALL))
@@ -308,7 +305,7 @@ async def scrape_msresearch():
             json_file = os.path.join(json_dir, f"{base_name}.json")
             with open(json_file, 'w', encoding='utf-8') as f:
                 json.dump(final_data, f, indent=2, ensure_ascii=False, separators=(',', ': '))
-            print(Fore.GREEN + f"\n✔ File saved to organized directory:" + Style.RESET_ALL)
+            print(Fore.GREEN + f"\n✔ File saved:" + Style.RESET_ALL)
             print(Fore.WHITE + "   • JSON: " + Fore.MAGENTA + f"{json_file}" + Style.RESET_ALL)
             print(Fore.CYAN + "\n📋 Sample of collected articles:" + Style.RESET_ALL)
             for i, article in enumerate(final_data[:3]):

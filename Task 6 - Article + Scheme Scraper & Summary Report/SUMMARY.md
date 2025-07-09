@@ -187,7 +187,7 @@ The purpose is to document difficulties (especially around page structure, anti-
   All scraping operations are wrapped in granular try/except blocks, with errors logged but not allowed to halt the entire process. This ensures partial results are still captured when possible.
 
 - **Export Flexibility:**  
-  Both CSV and JSON formats are supported, with contextual, timestamped filenames, making integration with downstream analytics and reporting tools easier.
+  JSON format are supported, with contextual, timestamped filenames, making integration with downstream analytics and reporting tools easier.
 
 - **Minimal External Dependencies:**  
   Only essential libraries (Playwright, tqdm/colorama for progress, pandas for output) are used to keep setup and deployment simple.

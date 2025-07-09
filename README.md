@@ -466,7 +466,7 @@ python binance_ws_postgres.py
 
 **📺 Demo Video:**
 
-- [Article & Scheme Scraper Demo](https://drive.google.com/file/d/19A8JaV-oEhIc61HMVp_DkJKwLkNT2hep/view?usp=sharing)
+- [Article & Scheme Scraper Demo](https://drive.google.com/file/d/1_PKZuou7T0IbYX8HK-KDpXoZyOkSFTrK/view?usp=sharing)
 
 **🎮 How to Run:**
 
@@ -745,7 +745,7 @@ All tasks include comprehensive demo videos showcasing:
 - [Task 1: RAG Service Demo](https://drive.google.com/file/d/1MxvYbs7p1eOF0BvVB2xuGwEnrwSeXqFq/view?usp=drive_link)
 - [Task 3: Kafka High-Throughput API Demo](https://drive.google.com/file/d/1ixwrW1pxjJ8gTwwPzmZTpNX7d0R9Gu5Z/view?usp=sharing)
 - [Task 4: Kubernetes Pod Scaling Demo](https://drive.google.com/file/d/1-F7p66JkSU27NG7UaQevjPJZ-pVTQ9Az/view?usp=sharing)
-- [Task 6: Article & Scheme Scraper Demo](https://drive.google.com/file/d/19A8JaV-oEhIc61HMVp_DkJKwLkNT2hep/view?usp=sharing)
+- [Task 6: Article & Scheme Scraper Demo](https://drive.google.com/file/d/1_PKZuou7T0IbYX8HK-KDpXoZyOkSFTrK/view?usp=sharing)
 - [Task 7: Multi-Agent Newsletter Demo](https://drive.google.com/file/d/1pirDiw_R_fGNzfuRJoPMGQOMHXEQ-tef/view?usp=sharing)
 
 ---

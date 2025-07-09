@@ -19,7 +19,7 @@
 ## ▶️ Demo Video
 
 Watch the demonstration of the Article & Scheme Scraper Suite here:  
-**[🟢 Demo Video (Google Drive Link)](https://drive.google.com/file/d/19A8JaV-oEhIc61HMVp_DkJKwLkNT2hep/view?usp=sharing)**
+**[🟢 Demo Video (Google Drive Link)](https://drive.google.com/file/d/1_PKZuou7T0IbYX8HK-KDpXoZyOkSFTrK/view?usp=sharing)**
 
 ---
 
@@ -76,7 +76,7 @@ Watch the demonstration of the Article & Scheme Scraper Suite here:
 AI-Backend-Hiring-Tasks-Prodigal-AI/
 └── Task 6 - Article + Scheme Scraper & Summary Report/
     ├── article_scheme_scraper/
-    │   ├── 🐍 msresearch_scraper.py
+    │   ├── 🐍 mircosoft.py
     │   ├── 🏛️ myscheme_scraper.py
     │   ├── 📋 requirements.txt
     │   └── 📖 README.md
@@ -237,7 +237,7 @@ python -m playwright install webkit
 ### 🔬 Microsoft Research Blog Scraper
 
 ```sh
-python msresearch_scraper.py
+python microsoft.py
 ```
 
 - **📝 Follow prompts**: Enter the desired number of articles to scrape with validation
